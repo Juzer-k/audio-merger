@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMerge // Advanced Cinema Audio-Video Editor</title>
+    <!-- Tailwind CSS for Responsive Layouts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090a0f',
+                        accentPurple: '#7c4dff',
+                        accentTeal: '#00f5d4',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #090a0f;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Three.js Canvas Container background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(15, 17, 28, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Active file drop styling */
+        .upload-zone {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .upload-zone.dragover {
+            border-color: #00f5d4;
+            background: rgba(0, 245, 212, 0.06);
+            box-shadow: 0 0 25px rgba(0, 245, 212, 0.2);
+            transform: scale(0.99);
+        }
+
+        /* Custom Slider Styling */
+        .premium-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            outline: none;
+        }
+        .premium-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #7c4dff;
+            cursor: pointer;
+            box-shadow: 0 0 12px #7c4dff;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+        .premium-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+            background: #00f5d4;
+            box-shadow: 0 0 15px #00f5d4;
+        }
+
+        /* Customized animated glowing buttons */
+        .glow-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .glow-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+        .glow-button:hover::after {
+            left: 120%;
+        }
+
+        /* Waveform simulation elements */
+        .wave-bar {
+            width: 4px;
+            background-color: rgba(124, 77, 255, 0.3);
+            border-radius: 9999px;
+            transition: height 0.15s ease, background-color 0.3s ease;
+        }
+        .wave-bar.active {
+            background-color: #00f5d4;
+        }
+
+        /* Loading spinner animations */
+        @keyframes rotate-clockwise {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes rotate-counter {
+            to { transform: rotate(-360deg); }
+        }
+        .spin-cw {
+            animation: rotate-clockwise 1.5s linear infinite;
+        }
+        .spin-ccw {
+            animation: rotate-counter 1s linear infinite;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 17, 28, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(124, 77, 255, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(124, 77, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen relative flex flex-col justify-between">
+
+    <!-- Interactive 3D Ambient Space Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="relative z-10 w-full max-w-7xl mx-auto px-4 py-8 md:py-12 flex-grow flex flex-col justify-center">
+        
+        <!-- Header Branding Area -->
+        <header class="text-center mb-8 md:mb-12 animate-fade-in-down">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-accentTeal tracking-wide uppercase mb-3 backdrop-blur-md">
+                <i class="fa-solid fa-sparkles text-xs animate-pulse"></i> High Fidelity Client-Side Engine
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-white via-[#d1c4e9] to-accentPurple bg-clip-text text-transparent">
+                CineMerge Studio
+            </h1>
+            <p class="text-gray-400 mt-3 text-sm md:text-base max-w-xl mx-auto">
+                Real-time audio track multiplexing directly inside your browser. No server uploads. Absolute data security with interactive audio preview controls.
+            </p>
+        </header>
+
+        <!-- Main Workspace Interface -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Workspace Pane: Media Uploads and Previews (Col 7) -->
+            <section class="lg:col-span-7 space-y-6">
+                
+                <!-- Video Section Card -->
+                <div class="glass-panel p-6 rounded-3xl transition-transform duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-film text-accentPurple"></i> 1. Video Stream Input
+                        </h2>
+                        <!-- Video Status Badge Symbol -->
+                        <span id="video-badge" class="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Video File
+                        </span>
+                    </div>
+
+                    <!-- Dropzone -->
+                    <div id="video-dropzone" class="upload-zone border-2 border-dashed border-white/15 hover:border-accentPurple rounded-2xl p-8 text-center cursor-pointer bg-white/[0.01] relative">
+                        <input type="file" id="video-input" accept="video/mp4, video/webm" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                        <div class="space-y-3 pointer-events-none relative z-10">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-accentPurple/10 flex items-center justify-center text-accentPurple group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-gray-200 font-semibold text-sm md:text-base">Drag & drop your movie asset here</h3>
+                                <p class="text-xs text-gray-400 mt-1">Accepts MP4, WebM formats (Optimized for Web)</p>
+                            </div>
+                            <span class="inline-block text-xs bg-white/5 px-3 py-1 rounded-full border border-white/10 text-gray-300 font-medium">Or Browse Files</span>
+                        </div>
+                    </div>
+
+                    <!-- Video Preview Player Frame -->
+                    <div id="video-preview-frame" class="hidden mt-4 rounded-2xl overflow-hidden border border-white/10 bg-black relative">
+                        <video id="video-player" controls class="w-full h-auto aspect-video object-contain"></video>
+                        <button id="change-video-btn" class="absolute top-4 right-4 z-30 bg-black/60 hover:bg-black/80 border border-white/15 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> Swap Video
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Audio Track Section Card with Embedded Audio Preview & Custom Trimming -->
+                <div class="glass-panel p-6 rounded-3xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-volume-high text-accentTeal"></i> 2. Audio Composition Layer
+                        </h2>
+                        
+                        <div class="flex items-center gap-2">
+                            <!-- Trim Status Badge Symbol -->
+                            <span id="audio-trim-badge" class="hidden text-xs px-2.5 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-semibold flex items-center gap-1 animate-bounce">
+                                <i class="fa-solid fa-scissors"></i> Trim Applied
+                            </span>
+                            <!-- Audio Status Badge Symbol -->
+                            <span id="audio-badge" class="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Dropzone -->
+                    <div id="audio-dropzone" class="upload-zone border-2 border-dashed border-white/15 hover:border-accentTeal rounded-2xl p-8 text-center cursor-pointer bg-white/[0.01] relative">
+                        <input type="file" id="audio-input" accept="audio/mp3, audio/wav, audio/mpeg" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                        <div class="space-y-3 pointer-events-none relative z-10">
+                            <div class="w-14 h-14 mx-auto rounded-2xl bg-accentTeal/10 flex items-center justify-center text-accentTeal transition-transform">
+                                <i class="fa-solid fa-file-audio text-2xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-gray-200 font-semibold text-sm md:text-base">Drag & drop your soundtrack overlay</h3>
+                                <p class="text-xs text-gray-400 mt-1">Accepts high-quality MP3, WAV formulations</p>
+                            </div>
+                            <span class="inline-block text-xs bg-white/5 px-3 py-1 rounded-full border border-white/10 text-gray-300 font-medium">Or Browse Files</span>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Audio Player Preview Container -->
+                    <div id="audio-preview-frame" class="hidden mt-4 p-5 rounded-2xl border border-white/10 bg-black/40 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <button id="audio-preview-play-btn" class="w-10 h-10 rounded-full bg-accentTeal/20 hover:bg-accentTeal/40 border border-accentTeal/40 flex items-center justify-center text-accentTeal flex-shrink-0 transition-colors">
+                                    <i id="audio-play-icon" class="fa-solid fa-play ml-0.5 text-sm"></i>
+                                </button>
+                                <div class="min-w-0">
+                                    <h4 id="audio-file-name" class="text-sm font-semibold text-gray-200 truncate">soundtrack.mp3</h4>
+                                    <p id="audio-file-size" class="text-xs text-gray-400">0.0 MB</p>
+                                </div>
+                            </div>
+                            <button id="change-audio-btn" class="bg-white/5 hover:bg-white/10 border border-white/15 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-xmark"></i> Remove
+                            </button>
+                        </div>
+                        
+                        <!-- Internal Audio Preview Object -->
+                        <audio id="audio-preview-player" class="hidden"></audio>
+
+                        <!-- Audio Progress Slider Scrub Controller -->
+                        <div class="flex items-center gap-3">
+                            <span id="audio-current-time" class="text-[11px] font-mono text-gray-400">0:00</span>
+                            <input id="audio-scrub-slider" type="range" min="0" max="100" value="0" class="premium-slider flex-grow h-1.5 bg-white/10">
+                            <span id="audio-duration" class="text-[11px] font-mono text-gray-400">0:00</span>
+                        </div>
+
+                        <!-- Collapsible Custom Manual Trim Settings Section -->
+                        <div class="border-t border-white/10 pt-3 mt-2">
+                            <button id="toggle-trim-btn" class="text-xs font-semibold text-accentTeal hover:text-white flex items-center gap-1.5 transition-colors focus:outline-none">
+                                <i class="fa-solid fa-scissors"></i> Manual Trim Settings <i id="trim-arrow" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
+                            </button>
+                            
+                            <div id="trim-controls-drawer" class="hidden mt-3 space-y-3 bg-black/30 p-3.5 rounded-xl border border-white/5">
+                                <!-- Start Trim Slider -->
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+                                        <span>Start Trim Offset</span>
+                                        <span id="trim-start-display" class="text-accentTeal font-bold">0.0s</span>
+                                    </div>
+                                    <input id="trim-start-slider" type="range" min="0" max="100" value="0" step="0.1" class="premium-slider h-1">
+                                </div>
+
+                                <!-- End Trim Slider -->
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between items-center text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+                                        <span>End Trim Cutoff</span>
+                                        <span id="trim-end-display" class="text-accentPurple font-bold">0.0s</span>
+                                    </div>
+                                    <input id="trim-end-slider" type="range" min="0" max="100" value="100" step="0.1" class="premium-slider h-1">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Track Waveform Visualizer -->
+                        <div class="pt-2">
+                            <p class="text-xs text-gray-400 mb-2 flex items-center gap-1.5 font-medium uppercase tracking-wider">
+                                <span id="waveform-status-indicator" class="w-2 h-2 rounded-full bg-gray-600"></span> Track Signal Signature
+                            </p>
+                            <div id="waveform-container" class="h-16 flex items-end justify-between gap-1 px-1 bg-black/60 rounded-xl border border-white/5">
+                                <!-- Generated Bars dynamic styling inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Workspace Pane: DSP Matrix Controls (Col 5) -->
+            <section class="lg:col-span-5 space-y-6">
+                <div class="glass-panel p-6 rounded-3xl space-y-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2 border-b border-white/10 pb-4">
+                        <i class="fa-solid fa-sliders text-accentPurple"></i> Mixing & DSP Parameters
+                    </h2>
+
+                    <!-- Mixing Mode Dropdown -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider">
+                            Audio Mixing Mode
+                        </label>
+                        <div class="relative">
+                            <select id="mix-mode" class="w-full bg-black/60 border border-white/15 focus:border-accentPurple rounded-xl px-4 py-3.5 text-sm text-gray-200 outline-none appearance-none cursor-pointer transition-all">
+                                <option value="replace">Replace Original Audio Track</option>
+                                <option value="mix" selected>Overlay / Combine with Original Video Audio</option>
+                                <option value="dialogue">Vocals & Dialogue Isolation Enhancement</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-gray-500 leading-normal">
+                            Choose how target elements interact with source frames. Overlay preserves environmental audio channels.
+                        </p>
+                    </div>
+
+                    <!-- Volume Matrix Range Sliders -->
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                <span>Output Track Gain Amplitude</span>
+                                <span id="vol-percentage" class="text-accentTeal font-bold">100%</span>
+                            </div>
+                            <div class="flex items-center gap-4 bg-black/40 p-3 rounded-xl border border-white/5">
+                                <i class="fa-solid fa-volume-low text-gray-500 text-sm"></i>
+                                <input id="vol-slider" type="range" min="0" max="200" value="100" class="premium-slider flex-grow">
+                                <i class="fa-solid fa-volume-high text-gray-400 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Control Modules -->
+                    <div class="pt-4 border-t border-white/10 space-y-4">
+                        <button id="btn-merge" class="glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentPurple to-[#512da8] text-white font-bold text-base shadow-lg shadow-accentPurple/20 hover:shadow-accentPurple/35 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0" disabled>
+                            <i class="fa-solid fa-shuffle"></i> Merge Audio & Video
+                        </button>
+
+                        <!-- Dynamic Real-Time Status Render Window with Cancel Action button -->
+                        <div id="process-window" class="hidden p-5 rounded-2xl border border-accentTeal/20 bg-accentTeal/[0.02] text-center space-y-4">
+                            <div class="relative w-16 h-16 mx-auto">
+                                <div class="absolute inset-0 spin-cw border-2 border-t-accentTeal border-r-transparent border-b-transparent border-l-transparent rounded-full"></div>
+                                <div class="absolute inset-2 spin-ccw border-2 border-b-accentPurple border-t-transparent border-r-transparent border-l-transparent rounded-full"></div>
+                                <div class="absolute inset-4 flex items-center justify-center text-accentTeal">
+                                    <i class="fa-solid fa-compact-disc text-sm"></i>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <h4 id="status-title" class="text-sm font-semibold text-gray-200">Multiplexing Audio Tracks...</h4>
+                                <p class="text-xs text-gray-400">Processing locally inside sandbox. Keep active to avoid latency drops.</p>
+                            </div>
+                            <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                                <div id="status-progress-bar" class="bg-gradient-to-r from-accentPurple to-accentTeal h-full w-0 transition-all duration-150"></div>
+                            </div>
+
+                            <!-- Abort/Cancel Button -->
+                            <button id="btn-cancel-merge" class="w-full py-2.5 px-4 rounded-xl border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 text-red-200 text-xs font-semibold transition-all flex items-center justify-center gap-2 mt-2">
+                                <i class="fa-solid fa-circle-stop"></i> Cancel Rendering
+                            </button>
+                        </div>
+
+                        <!-- Completed Stream Output Area with Merged Preview -->
+                        <div id="completed-window" class="hidden p-5 rounded-2xl border border-accentTeal/20 bg-accentTeal/[0.04] text-center space-y-4">
+                            <div class="w-12 h-12 rounded-full bg-accentTeal/10 border border-accentTeal/30 flex items-center justify-center text-accentTeal mx-auto text-lg shadow-lg shadow-accentTeal/10">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Superimposition Completed</h4>
+                                <p class="text-xs text-gray-400 mt-1">Review the fully merged output player below</p>
+                            </div>
+                            
+                            <!-- Merged Output Preview Frame -->
+                            <div class="rounded-xl overflow-hidden border border-accentTeal/20 bg-black shadow-inner shadow-black relative">
+                                <video id="merged-preview-player" controls class="w-full h-auto aspect-video object-contain"></video>
+                            </div>
+
+                            <button id="btn-download" class="glow-button w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-sm shadow-lg shadow-accentTeal/10 hover:shadow-accentTeal/30 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-down"></i> Download Enhanced Video
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Footer Space -->
+    <footer class="relative z-10 w-full text-center py-6 text-xs text-gray-500 border-t border-white/5 backdrop-blur-sm mt-8">
+        <p>&copy; 2026 CineMerge Studio Inc. All assets rendered in secure local DOM spaces.</p>
+    </footer>
+
+    <!-- Hidden native element canvas workspace for real-time multiplex compositing -->
+    <canvas id="hidden-engine-canvas" class="hidden"></canvas>
+
+    <!-- Three.js Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- App Code Engine Execution -->
+    <script>
+        // Set dynamic application identifiers
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cinemerge-studio';
+
+        /* ==========================================================
+           1. THREE.JS PARTICLE SPACE GRID ENGINE
+           ========================================================== */
+        const canvasContainer = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        canvasContainer.appendChild(renderer.domElement);
+
+        const count = 350;
+        const particleGeometry = new THREE.BufferGeometry();
+        const coords = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+
+        const purpleColor = new THREE.Color(0x7c4dff);
+        const tealColor = new THREE.Color(0x00f5d4);
+
+        for (let i = 0; i < count; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            const distance = 3.5 + Math.random() * 7;
+
+            coords[i * 3] = distance * Math.sin(phi) * Math.cos(theta);
+            coords[i * 3 + 1] = distance * Math.sin(phi) * Math.sin(theta);
+            coords[i * 3 + 2] = distance * Math.cos(phi);
+
+            const mixedColor = purpleColor.clone().lerp(tealColor, Math.random());
+            colors[i * 3] = mixedColor.r;
+            colors[i * 3 + 1] = mixedColor.g;
+            colors[i * 3 + 2] = mixedColor.b;
+        }
+
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(coords, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.045,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.7,
+            blending: THREE.AdditiveBlending
+        });
+
+        const pointsGrid = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(pointsGrid);
+
+        camera.position.z = 6;
+
+        let spaceX = 0, spaceY = 0;
+        let deltaX = 0, deltaY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            spaceX = (e.clientX / window.innerWidth - 0.5) * 1.5;
+            spaceY = (e.clientY / window.innerHeight - 0.5) * -1.5;
+        });
+
+        const frameTimer = new THREE.Clock();
+
+        function renderEngineLoop() {
+            requestAnimationFrame(renderEngineLoop);
+            const elapsed = frameTimer.getElapsedTime();
+
+            deltaX += (spaceX - deltaX) * 0.05;
+            deltaY += (spaceY - deltaY) * 0.05;
+
+            pointsGrid.rotation.y = elapsed * 0.05 + deltaX * 0.2;
+            pointsGrid.rotation.x = elapsed * 0.02 + deltaY * 0.2;
+
+            renderer.render(scene, camera);
+        }
+
+        renderEngineLoop();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+
+        /* ==========================================================
+           2. STREAM PIPELINES & USER INTERFACE MATRIX
+           ========================================================== */
+        let stateVideo = null;
+        let stateAudio = null;
+        let originalVideoName = '';
+
+        let currentVideoObjectURL = '';
+        let currentAudioObjectURL = '';
+        let currentMergedObjectURL = '';
+
+        // Media Input Node Elements
+        const videoInput = document.getElementById('video-input');
+        const audioInput = document.getElementById('audio-input');
+        const videoDropzone = document.getElementById('video-dropzone');
+        const audioDropzone = document.getElementById('audio-dropzone');
+        const videoPreviewFrame = document.getElementById('video-preview-frame');
+        const audioPreviewFrame = document.getElementById('audio-preview-frame');
+        const videoPlayer = document.getElementById('video-player');
+        const audioFileName = document.getElementById('audio-file-name');
+        const audioFileSize = document.getElementById('audio-file-size');
+        const changeVideoBtn = document.getElementById('change-video-btn');
+        const changeAudioBtn = document.getElementById('change-audio-btn');
+
+        // Audio Preview Player Controller Elements
+        const audioPreviewPlayer = document.getElementById('audio-preview-player');
+        const audioPreviewPlayBtn = document.getElementById('audio-preview-play-btn');
+        const audioPlayIcon = document.getElementById('audio-play-icon');
+        const audioCurrentTime = document.getElementById('audio-current-time');
+        const audioDuration = document.getElementById('audio-duration');
+        const audioScrubSlider = document.getElementById('audio-scrub-slider');
+        const waveformStatusIndicator = document.getElementById('waveform-status-indicator');
+
+        // Audio Manual Custom Trimming Slider Variables
+        const toggleTrimBtn = document.getElementById('toggle-trim-btn');
+        const trimArrow = document.getElementById('trim-arrow');
+        const trimControlsDrawer = document.getElementById('trim-controls-drawer');
+        const trimStartSlider = document.getElementById('trim-start-slider');
+        const trimEndSlider = document.getElementById('trim-end-slider');
+        const trimStartDisplay = document.getElementById('trim-start-display');
+        const trimEndDisplay = document.getElementById('trim-end-display');
+
+        // Mixer Elements
+        const volSlider = document.getElementById('vol-slider');
+        const volPercentage = document.getElementById('vol-percentage');
+        const mixModeSelect = document.getElementById('mix-mode');
+        const btnMerge = document.getElementById('btn-merge');
+
+        // Badges Elements
+        const videoBadge = document.getElementById('video-badge');
+        const audioBadge = document.getElementById('audio-badge');
+        const audioTrimBadge = document.getElementById('audio-trim-badge');
+
+        // Status Framework Elements
+        const processWindow = document.getElementById('process-window');
+        const btnCancelMerge = document.getElementById('btn-cancel-merge');
+        const completedWindow = document.getElementById('completed-window');
+        const statusProgressBar = document.getElementById('status-progress-bar');
+        const statusTitle = document.getElementById('status-title');
+        const mergedPreviewPlayer = document.getElementById('merged-preview-player');
+        const btnDownload = document.getElementById('btn-download');
+
+        // Setup File Drop Event Listeners
+        ['dragenter', 'dragover'].forEach(name => {
+            videoDropzone.addEventListener(name, (e) => { e.preventDefault(); videoDropzone.classList.add('dragover'); }, false);
+            audioDropzone.addEventListener(name, (e) => { e.preventDefault(); audioDropzone.classList.add('dragover'); }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(name => {
+            videoDropzone.addEventListener(name, (e) => { e.preventDefault(); videoDropzone.classList.remove('dragover'); }, false);
+            audioDropzone.addEventListener(name, (e) => { e.preventDefault(); audioDropzone.classList.remove('dragover'); }, false);
+        });
+
+        videoDropzone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length) handleVideoImport(files[0]);
+        });
+
+        audioDropzone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length) handleAudioImport(files[0]);
+        });
+
+        videoInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleVideoImport(e.target.files[0]);
+        });
+
+        audioInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleAudioImport(e.target.files[0]);
+        });
+
+        // Toggle Manual Trim Settings Drawer Accordion
+        toggleTrimBtn.addEventListener('click', () => {
+            const isHidden = trimControlsDrawer.classList.contains('hidden');
+            if (isHidden) {
+                trimControlsDrawer.classList.remove('hidden');
+                trimArrow.style.transform = 'rotate(180deg)';
+            } else {
+                trimControlsDrawer.classList.add('hidden');
+                trimArrow.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // 2.1 Handling Video Sub-Engine Configuration
+        function handleVideoImport(file) {
+            if (!file.type.startsWith('video/')) {
+                displayToast('Invalid media type. Please select an MP4 or WebM video format.');
+                return;
+            }
+            stateVideo = file;
+            originalVideoName = file.name;
+            videoDropzone.classList.add('hidden');
+            videoPreviewFrame.classList.remove('hidden');
+
+            // Video loaded status symbol update
+            videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium flex items-center gap-1.5";
+            videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Video Synced';
+
+            if (currentVideoObjectURL) URL.revokeObjectURL(currentVideoObjectURL);
+            currentVideoObjectURL = URL.createObjectURL(file);
+            videoPlayer.src = currentVideoObjectURL;
+            videoPlayer.load();
+
+            // Synced Volume logic
+            updatePreviewVolume();
+            verifyIntegrationReadiness();
+            
+            // Re-apply Audio trimming calculations if Audio is already loaded
+            if (stateAudio) {
+                applyAudioTrimmingCalculations();
+            }
+        }
+
+        function handleAudioImport(file) {
+            if (!file.type.startsWith('audio/') && !file.name.endsWith('.mp3')) {
+                displayToast('Invalid configuration. Please load a valid audio track sequence.');
+                return;
+            }
+            stateAudio = file;
+            audioDropzone.classList.add('hidden');
+            audioPreviewFrame.classList.remove('hidden');
+
+            audioFileName.innerText = file.name;
+            audioFileSize.innerText = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+
+            if (currentAudioObjectURL) URL.revokeObjectURL(currentAudioObjectURL);
+            currentAudioObjectURL = URL.createObjectURL(file);
+            
+            // Assign preview player source directly
+            audioPreviewPlayer.src = currentAudioObjectURL;
+            audioPreviewPlayer.load();
+
+            // Set default button layout
+            audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+            audioScrubSlider.value = 0;
+
+            updatePreviewVolume();
+            verifyIntegrationReadiness();
+        }
+
+        // 2.3 Audio Preview Control Pipeline & dynamic trim checking
+        audioPreviewPlayer.onloadedmetadata = () => {
+            applyAudioTrimmingCalculations(true); // reset custom slider boundaries to full track scope on fresh load
+        };
+
+        function applyAudioTrimmingCalculations(resetSliders = false) {
+            if (!stateAudio) return;
+
+            const originalDuration = audioPreviewPlayer.duration;
+            let videoBoundDuration = originalDuration;
+
+            // Constrain trim limits visually by Video length if video is attached
+            if (stateVideo && videoPlayer.duration) {
+                videoBoundDuration = Math.min(originalDuration, videoPlayer.duration);
+            }
+
+            // Set up ranges for custom slider inputs
+            trimStartSlider.max = originalDuration.toFixed(1);
+            trimEndSlider.max = originalDuration.toFixed(1);
+
+            if (resetSliders) {
+                trimStartSlider.value = "0";
+                trimEndSlider.value = videoBoundDuration.toFixed(1);
+            }
+
+            // Real-time Slider Constraints values extraction
+            const trimStartVal = parseFloat(trimStartSlider.value);
+            const trimEndVal = parseFloat(trimEndSlider.value);
+
+            trimStartDisplay.innerText = `${trimStartVal.toFixed(1)}s`;
+            trimEndDisplay.innerText = `${trimEndVal.toFixed(1)}s`;
+
+            // Active display length calculation
+            const allowedDuration = trimEndVal - trimStartVal;
+
+            // Audio loaded status symbol update
+            audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-medium flex items-center gap-1.5";
+            audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span> Audio Synced';
+
+            // Active Custom Trim notification symbol
+            if (trimStartVal > 0 || trimEndVal < originalDuration) {
+                audioTrimBadge.classList.remove('hidden');
+            } else {
+                audioTrimBadge.classList.add('hidden');
+            }
+
+            audioDuration.innerText = formatTime(allowedDuration);
+            audioScrubSlider.max = Math.floor(allowedDuration);
+
+            formulateVisualSignature(trimStartVal, trimEndVal, originalDuration);
+        }
+
+        // Constraints loop: Trim Start must be less than Trim End
+        trimStartSlider.addEventListener('input', () => {
+            let startVal = parseFloat(trimStartSlider.value);
+            const endVal = parseFloat(trimEndSlider.value);
+            if (startVal >= endVal) {
+                startVal = Math.max(0, endVal - 0.5);
+                trimStartSlider.value = startVal;
+            }
+            audioPreviewPlayer.currentTime = startVal; // Seek target for instant auditory feedback
+            applyAudioTrimmingCalculations();
+        });
+
+        trimEndSlider.addEventListener('input', () => {
+            const startVal = parseFloat(trimStartSlider.value);
+            let endVal = parseFloat(trimEndSlider.value);
+            if (endVal <= startVal) {
+                endVal = Math.min(audioPreviewPlayer.duration, startVal + 0.5);
+                trimEndSlider.value = endVal;
+            }
+            audioPreviewPlayer.currentTime = endVal; // Seek target for instant auditory feedback
+            applyAudioTrimmingCalculations();
+        });
+
+        audioPreviewPlayer.ontimeupdate = () => {
+            const trimStartVal = parseFloat(trimStartSlider.value);
+            const trimEndVal = parseFloat(trimEndSlider.value);
+
+            // Loop / Restart play cursor if boundaries exceeded
+            if (audioPreviewPlayer.currentTime < trimStartVal) {
+                audioPreviewPlayer.currentTime = trimStartVal;
+            }
+            if (audioPreviewPlayer.currentTime >= trimEndVal) {
+                audioPreviewPlayer.currentTime = trimStartVal;
+                audioPreviewPlayer.pause();
+                audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+                waveformStatusIndicator.className = "w-2 h-2 rounded-full bg-gray-600";
+            }
+
+            if (!audioScrubSlider.matches(':active')) {
+                // Calculate display progress relative to the trim window
+                const elapsedTrimTime = Math.max(0, audioPreviewPlayer.currentTime - trimStartVal);
+                audioScrubSlider.value = Math.floor(elapsedTrimTime);
+            }
+            const currentOffset = Math.max(0, audioPreviewPlayer.currentTime - trimStartVal);
+            audioCurrentTime.innerText = formatTime(currentOffset);
+        };
+
+        audioScrubSlider.addEventListener('input', () => {
+            const trimStartVal = parseFloat(trimStartSlider.value);
+            audioPreviewPlayer.currentTime = trimStartVal + parseFloat(audioScrubSlider.value);
+            audioCurrentTime.innerText = formatTime(audioScrubSlider.value);
+        });
+
+        audioPreviewPlayBtn.onclick = () => {
+            if (audioPreviewPlayer.paused) {
+                // Play within custom trim boundaries
+                const trimStartVal = parseFloat(trimStartSlider.value);
+                if (audioPreviewPlayer.currentTime < trimStartVal || audioPreviewPlayer.currentTime >= parseFloat(trimEndSlider.value)) {
+                    audioPreviewPlayer.currentTime = trimStartVal;
+                }
+                audioPreviewPlayer.play();
+                audioPlayIcon.className = "fa-solid fa-pause text-sm";
+                waveformStatusIndicator.className = "w-2 h-2 rounded-full bg-accentTeal animate-pulse";
+            } else {
+                audioPreviewPlayer.pause();
+                audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+                waveformStatusIndicator.className = "w-2 h-2 rounded-full bg-gray-600";
+            }
+        };
+
+        audioPreviewPlayer.onended = () => {
+            audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+            waveformStatusIndicator.className = "w-2 h-2 rounded-full bg-gray-600";
+            audioScrubSlider.value = 0;
+            audioCurrentTime.innerText = "0:00";
+        };
+
+        // Utility time conversion function
+        function formatTime(secs) {
+            if (isNaN(secs)) return "0:00";
+            const minutes = Math.floor(secs / 60);
+            const seconds = Math.floor(secs % 60);
+            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // 2.4 Reset Actions / Swapping Assets
+        changeVideoBtn.addEventListener('click', () => {
+            stateVideo = null;
+            videoPlayer.pause();
+            videoPlayer.removeAttribute('src');
+            videoPlayer.load();
+            videoPreviewFrame.classList.add('hidden');
+            videoDropzone.classList.remove('hidden');
+
+            // Reset video badge status
+            videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
+            videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Video File';
+
+            videoInput.value = '';
+            verifyIntegrationReadiness();
+
+            // Recheck Audio limits as video constraint is removed
+            if (stateAudio) {
+                applyAudioTrimmingCalculations();
+            }
+        });
+
+        changeAudioBtn.addEventListener('click', () => {
+            stateAudio = null;
+            audioPreviewPlayer.pause();
+            audioPreviewPlayer.removeAttribute('src');
+            audioPreviewPlayer.load();
+            audioPreviewFrame.classList.add('hidden');
+            audioDropzone.classList.remove('hidden');
+
+            // Reset audio badges status
+            audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
+            audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track';
+            audioTrimBadge.classList.add('hidden');
+
+            audioInput.value = '';
+            verifyIntegrationReadiness();
+        });
+
+        // 2.5 Volume matrix update listener
+        volSlider.addEventListener('input', (e) => {
+            volPercentage.innerText = `${e.target.value}%`;
+            updatePreviewVolume();
+        });
+
+        function updatePreviewVolume() {
+            const currentGain = parseFloat(volSlider.value) / 100;
+            const previewVolClamped = Math.min(1.0, currentGain);
+            if (audioPreviewPlayer) {
+                audioPreviewPlayer.volume = previewVolClamped;
+            }
+            if (videoPlayer) {
+                videoPlayer.volume = previewVolClamped;
+            }
+        }
+
+        function verifyIntegrationReadiness() {
+            if (stateVideo && stateAudio) {
+                btnMerge.removeAttribute('disabled');
+            } else {
+                btnMerge.setAttribute('disabled', 'true');
+            }
+        }
+
+        // Highlight and formulate waveform with active/trimmed visual sections
+        function formulateVisualSignature(trimStart, trimEnd, originalDuration) {
+            const barContainer = document.getElementById('waveform-container');
+            barContainer.innerHTML = '';
+            const barCount = Math.floor(barContainer.clientWidth / 6) || 45;
+
+            const startIndex = Math.floor(barCount * (trimStart / originalDuration));
+            const endIndex = Math.floor(barCount * (trimEnd / originalDuration));
+
+            for (let i = 0; i < barCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'wave-bar';
+                const initialHeight = Math.floor(Math.random() * 32) + 8;
+                bar.style.height = `${initialHeight}px`;
+
+                // Dim/Gray out bars outside the custom trimmed boundaries
+                if (i < startIndex || i >= endIndex) {
+                    bar.style.opacity = "0.12";
+                }
+
+                barContainer.appendChild(bar);
+            }
+
+            const signalJitterTimer = setInterval(() => {
+                if (!stateAudio) {
+                    clearInterval(signalJitterTimer);
+                    return;
+                }
+                const activeBars = barContainer.children;
+                const isPlaying = !audioPreviewPlayer.paused;
+                for (let i = 0; i < activeBars.length; i++) {
+                    let dynamicOffset = Math.sin((i / 5) + Date.now() / 200) * 8 + 15;
+                    let multiplier = isPlaying ? 1.5 : 0.3;
+                    const jitterHeight = Math.max(4, Math.floor(dynamicOffset + (Math.random() * 12 * multiplier)));
+                    activeBars[i].style.height = `${jitterHeight}px`;
+                    
+                    // Only animate full brightness for bars within permitted boundaries
+                    if (i >= startIndex && i < endIndex) {
+                        if (isPlaying && Math.random() > 0.4) {
+                            activeBars[i].classList.add('active');
+                        } else {
+                            activeBars[i].classList.remove('active');
+                        }
+                    }
+                }
+            }, 100);
+        }
+
+        /* ==========================================================
+           3. CLIENT-SIDE WEB AUDIO & DIRECT STREAM CAPTURE PIPELINE
+           ========================================================== */
+        let audioCtx;
+        let compositionVideoNode;
+        let compositionAudioNode;
+        let streamRecorder;
+        let recordedChunks = [];
+        let renderTimer;
+
+        btnMerge.addEventListener('click', async () => {
+            if (!stateVideo || !stateAudio) return;
+
+            // Pause preview players to prevent audio overlaps during merge
+            videoPlayer.pause();
+            audioPreviewPlayer.pause();
+            audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+            waveformStatusIndicator.className = "w-2 h-2 rounded-full bg-gray-600";
+
+            btnMerge.style.display = 'none';
+            completedWindow.classList.add('hidden');
+            processWindow.classList.remove('hidden');
+            statusProgressBar.style.width = '0%';
+            statusTitle.innerText = 'Initializing local encoders...';
+
+            try {
+                // Initialize rendering nodes for multiplex execution
+                compositionVideoNode = document.createElement('video');
+                compositionAudioNode = document.createElement('audio');
+
+                compositionVideoNode.src = currentVideoObjectURL;
+                compositionAudioNode.src = currentAudioObjectURL;
+
+                // Move composition elements directly to active DOM.
+                // An off-screen absolute positioning forces the browser hardware GPU engine to process frames at full speed!
+                compositionVideoNode.style.position = 'fixed';
+                compositionVideoNode.style.left = '-9999px';
+                compositionVideoNode.style.top = '-9999px';
+                compositionVideoNode.style.width = '4px';
+                compositionVideoNode.style.height = '4px';
+                compositionVideoNode.style.opacity = '0.01';
+                compositionVideoNode.style.pointerEvents = 'none';
+                document.body.appendChild(compositionVideoNode);
+
+                compositionAudioNode.style.position = 'fixed';
+                compositionAudioNode.style.left = '-9999px';
+                compositionAudioNode.style.top = '-9999px';
+                document.body.appendChild(compositionAudioNode);
+
+                // IMPORTANT: Keep elements unmuted to ensure Web Audio gathers decoded output.
+                // We keep them physically muted inside speakers by avoiding audioCtx.destination connection.
+                compositionVideoNode.muted = false;
+                compositionAudioNode.muted = false;
+
+                // Set crossOrigin to avoid potential secure DOM canvas tainting
+                compositionVideoNode.crossOrigin = "anonymous";
+                compositionAudioNode.crossOrigin = "anonymous";
+
+                // Resolve stream metadata to capture layout properties
+                await Promise.all([
+                    new Promise((resolve, reject) => {
+                        compositionVideoNode.onloadedmetadata = resolve;
+                        compositionVideoNode.onerror = () => reject(new Error("Unable to parse video stream properties."));
+                    }),
+                    new Promise((resolve, reject) => {
+                        compositionAudioNode.onloadedmetadata = resolve;
+                        compositionAudioNode.onerror = () => reject(new Error("Unable to parse audio stream properties."));
+                    })
+                ]);
+
+                // Initialize DSP Web Audio API pipeline context
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                await audioCtx.resume();
+                
+                const destinationNode = audioCtx.createMediaStreamDestination();
+
+                // Connect custom soundtrack overlay channel
+                const customAudioSource = audioCtx.createMediaElementSource(compositionAudioNode);
+                const gainControlNode = audioCtx.createGain();
+                gainControlNode.gain.value = parseFloat(volSlider.value) / 100;
+                customAudioSource.connect(gainControlNode);
+                gainControlNode.connect(destinationNode);
+
+                // Analyze Chosen Track Mixing Matrix Mode
+                const chosenMode = mixModeSelect.value;
+                if (chosenMode !== 'replace') {
+                    // Inject and overlay the original video background audio track
+                    const originalVideoSource = audioCtx.createMediaElementSource(compositionVideoNode);
+                    const originalGainControl = audioCtx.createGain();
+                    
+                    if (chosenMode === 'dialogue') {
+                        // Dampen original soundscapes to clear up vocal frequencies
+                        originalGainControl.gain.value = 0.20;
+                    } else {
+                        // Standard gain combination factor
+                        originalGainControl.gain.value = 0.80;
+                    }
+                    originalVideoSource.connect(originalGainControl);
+                    originalGainControl.connect(destinationNode);
+                }
+
+                // DIRECT STREAM CAPTURE (Bypassing Canvas draws ensures pristine framerate/quality!)
+                const captureStream = compositionVideoNode.captureStream ? compositionVideoNode.captureStream() : compositionVideoNode.mozCaptureStream();
+                
+                const combinedStream = new MediaStream();
+
+                // Add original native resolution video tracks
+                const rawVideoTracks = captureStream.getVideoTracks();
+                if (rawVideoTracks.length > 0) {
+                    combinedStream.addTrack(rawVideoTracks[0]);
+                } else {
+                    throw new Error("No hardware video tracks detected in file source.");
+                }
+
+                // Add real-time mixed Audio track
+                const mixedAudioTracks = destinationNode.stream.getAudioTracks();
+                if (mixedAudioTracks.length > 0) {
+                    combinedStream.addTrack(mixedAudioTracks[0]);
+                }
+
+                // Match system codecs
+                let recordingOptions = { mimeType: 'video/webm;codecs=vp9,opus' };
+                if (!MediaRecorder.isTypeSupported(recordingOptions.mimeType)) {
+                    recordingOptions = { mimeType: 'video/webm;codecs=vp8,opus' };
+                    if (!MediaRecorder.isTypeSupported(recordingOptions.mimeType)) {
+                        recordingOptions = { mimeType: 'video/mp4' };
+                        if (!MediaRecorder.isTypeSupported(recordingOptions.mimeType)) {
+                            recordingOptions = { mimeType: '' }; 
+                        }
+                    }
+                }
+
+                recordedChunks = [];
+                
+                // Enforce high bitrates to preserve absolute visual and audio fidelity!
+                const bitrateOption = {
+                    videoBitsPerSecond: 15000000, // 15 Mbps for pristine visual definition
+                    audioBitsPerSecond: 320000,   // 320 Kbps studio high-fidelity audio
+                };
+
+                streamRecorder = new MediaRecorder(combinedStream, {
+                    ...recordingOptions,
+                    ...bitrateOption
+                });
+                
+                streamRecorder.ondataavailable = (e) => {
+                    if (e.data && e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+
+                streamRecorder.onstop = () => {
+                    // Only process result blob if recording wasn't cancelled mid-way
+                    if (recordedChunks.length > 0) {
+                        const finalBlob = new Blob(recordedChunks, { type: streamRecorder.mimeType || 'video/webm' });
+                        const blobURL = URL.createObjectURL(finalBlob);
+                        displayFinalizedOverlay(blobURL);
+                    }
+                };
+
+                // Extract bounds for custom trimming during render playback
+                const activeTrimStart = parseFloat(trimStartSlider.value);
+                const activeTrimEnd = parseFloat(trimEndSlider.value);
+
+                // Set Initial Starting boundaries prior to play execution
+                compositionVideoNode.currentTime = 0;
+                compositionAudioNode.currentTime = activeTrimStart;
+
+                // Precision tracking render monitoring loop (30ms tight loop checks for instant cut-off)
+                renderTimer = setInterval(() => {
+                    if (!compositionVideoNode || !compositionAudioNode) return;
+                    
+                    const currentVidTime = compositionVideoNode.currentTime;
+                    const durationVid = compositionVideoNode.duration;
+                    const currentAudTime = compositionAudioNode.currentTime;
+
+                    // Pause the custom audio node explicitly if it exceeds manual End Trim bounds
+                    if (currentAudTime >= activeTrimEnd) {
+                        compositionAudioNode.pause();
+                    }
+
+                    // CRITICAL DURATION LOCK: Stop recording immediately when the original video ends
+                    if (currentVidTime >= durationVid || compositionVideoNode.ended) {
+                        terminateStreamsRendering();
+                        return;
+                    }
+
+                    const renderPercentage = (currentVidTime / durationVid) * 100;
+                    statusProgressBar.style.width = `${renderPercentage}%`;
+                    statusTitle.innerText = `Multiplexing: ${Math.floor(renderPercentage)}%`;
+                }, 30);
+
+                compositionVideoNode.onended = () => {
+                    terminateStreamsRendering();
+                };
+
+                compositionVideoNode.onerror = () => {
+                    displayToast('A hardware error occurred during native encoding.');
+                    abortProcessPipeline();
+                };
+
+                // Play and Record simultaneously
+                compositionVideoNode.play();
+                compositionAudioNode.play();
+                streamRecorder.start();
+
+            } catch (err) {
+                console.error(err);
+                displayToast(`Composition failed: ${err.message}`);
+                abortProcessPipeline();
+            }
+        });
+
+        // Trigger Abort / Cancel Workflow
+        btnCancelMerge.onclick = () => {
+            abortProcessPipeline(true);
+        };
+
+        // Terminate rendering cycles and clean up the active DOM nodes
+        function terminateStreamsRendering(isCancelled = false) {
+            clearInterval(renderTimer);
+            if (streamRecorder && streamRecorder.state !== 'inactive') {
+                if (isCancelled) {
+                    recordedChunks = []; // Empty chunks to prevent triggering preview player
+                }
+                streamRecorder.stop();
+            }
+            if (compositionVideoNode) {
+                compositionVideoNode.pause();
+                compositionVideoNode.removeAttribute('src');
+                compositionVideoNode.load();
+                if (compositionVideoNode.parentNode) {
+                    compositionVideoNode.parentNode.removeChild(compositionVideoNode);
+                }
+            }
+            if (compositionAudioNode) {
+                compositionAudioNode.pause();
+                compositionAudioNode.removeAttribute('src');
+                compositionAudioNode.load();
+                if (compositionAudioNode.parentNode) {
+                    compositionAudioNode.parentNode.removeChild(compositionAudioNode);
+                }
+            }
+            if (audioCtx) {
+                audioCtx.close();
+            }
+        }
+
+        // Abort the merging pipeline on errors or cancel requests
+        function abortProcessPipeline(isUserCancel = false) {
+            terminateStreamsRendering(isUserCancel);
+            processWindow.classList.add('hidden');
+            btnMerge.style.display = 'block';
+            if (isUserCancel) {
+                displayToast('Merging process cancelled by user.');
+            }
+        }
+
+        // Display Completed State with Rendered Output Preview Player
+        function displayFinalizedOverlay(mergedURL) {
+            processWindow.classList.add('hidden');
+            completedWindow.classList.remove('hidden');
+
+            if (currentMergedObjectURL) URL.revokeObjectURL(currentMergedObjectURL);
+            currentMergedObjectURL = mergedURL;
+
+            // Load directly into completed preview element
+            mergedPreviewPlayer.src = mergedURL;
+            mergedPreviewPlayer.load();
+
+            btnDownload.onclick = () => {
+                const anchorNode = document.createElement('a');
+                anchorNode.href = mergedURL;
+                anchorNode.download = `CineMerge_Output_${Date.now()}_${originalVideoName || 'project.mp4'}`;
+                document.body.appendChild(anchorNode);
+                anchorNode.click();
+                document.body.removeChild(anchorNode);
+            };
+        }
+
+        // Custom Notification Toast Functionality
+        function displayToast(msg) {
+            const toastElement = document.createElement('div');
+            toastElement.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-red-600/95 border border-red-500/30 text-white px-5 py-3 rounded-2xl text-sm font-semibold shadow-2xl backdrop-blur-md transition-all duration-300';
+            toastElement.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> ${msg}`;
+            document.body.appendChild(toastElement);
+            setTimeout(() => {
+                toastElement.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(toastElement), 400);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
