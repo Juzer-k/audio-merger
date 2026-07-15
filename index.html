@@ -11,7 +11,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -216,6 +216,11 @@
                         <button id="change-video-btn" class="absolute top-4 right-4 z-30 bg-black/60 hover:bg-black/80 border border-white/15 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
                             <i class="fa-solid fa-arrow-rotate-left"></i> Swap Video
                         </button>
+                        <!-- Integrated Real-time Video Metadata Display -->
+                        <div id="video-metadata" class="p-3 bg-black/80 border-t border-white/5 flex flex-wrap justify-between items-center text-xs text-gray-400 gap-2">
+                            <span id="video-file-name" class="truncate font-semibold text-gray-300 max-w-[60%]"></span>
+                            <span id="video-file-size" class="font-mono bg-accentPurple/10 text-accentPurple px-2.5 py-1 rounded-md border border-accentPurple/20">0.00 MB</span>
+                        </div>
                     </div>
                 </div>
 
@@ -631,6 +636,20 @@
             videoDropzone.classList.add('hidden');
             videoPreviewFrame.classList.remove('hidden');
 
+            // Set and render calculated video file size values (MB)
+            const videoMetadata = document.getElementById('video-metadata');
+            const videoFileNameEl = document.getElementById('video-file-name');
+            const videoFileSizeEl = document.getElementById('video-file-size');
+            
+            if (videoMetadata && videoFileNameEl && videoFileSizeEl) {
+                videoMetadata.classList.remove('hidden');
+                videoFileNameEl.innerText = file.name;
+                
+                // Absolute MB Calculation
+                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                videoFileSizeEl.innerText = `${sizeInMB} MB`;
+            }
+
             // Video loaded status symbol update
             videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium flex items-center gap-1.5";
             videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Video Synced';
@@ -821,6 +840,13 @@
             videoPlayer.removeAttribute('src');
             videoPlayer.load();
             videoPreviewFrame.classList.add('hidden');
+            
+            // Clean up metadata display
+            const videoMetadata = document.getElementById('video-metadata');
+            if (videoMetadata) {
+                videoMetadata.classList.add('hidden');
+            }
+
             videoDropzone.classList.remove('hidden');
 
             // Reset video badge status
@@ -976,7 +1002,6 @@
                 document.body.appendChild(compositionAudioNode);
 
                 // IMPORTANT: Keep elements unmuted to ensure Web Audio gathers decoded output.
-                // We keep them physically muted inside speakers by avoiding audioCtx.destination connection.
                 compositionVideoNode.muted = false;
                 compositionAudioNode.muted = false;
 
