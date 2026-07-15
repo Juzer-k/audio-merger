@@ -11,7 +11,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -158,27 +158,77 @@
 </head>
 <body class="font-sans min-h-screen relative flex flex-col justify-between">
 
+    <!-- Browser Compatibility Persistent Warning Modal -->
+    <div id="browser-warning-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in">
+        <div class="glass-panel p-6 md:p-8 rounded-3xl max-w-md w-full border border-white/10 shadow-2xl relative overflow-hidden text-center space-y-6">
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-accentPurple/20 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-accentTeal/20 rounded-full blur-3xl"></div>
+            
+            <div class="relative z-10 space-y-4">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-3xl">
+                    <i class="fa-brands fa-chrome animate-pulse"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white tracking-wide">Google Chrome Recommended</h3>
+                <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
+                    For proper working of this site, please open it in Chrome. Other browsers may restrict high-fidelity client-side Web Audio synthesis or direct video stream capture APIs.
+                </p>
+                <div class="pt-2">
+                    <button id="close-warning-btn" class="glow-button w-full py-3 px-6 rounded-xl bg-gradient-to-r from-accentPurple to-[#512da8] text-white font-bold text-xs shadow-lg shadow-accentPurple/25 transition-all">
+                        I Understand, Proceed Anyway
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Interactive 3D Ambient Space Background -->
     <div id="canvas-container"></div>
 
-    <!-- Main Dynamic Content Wrapper -->
-    <main class="relative z-10 w-full max-w-7xl mx-auto px-4 py-8 md:py-12 flex-grow flex flex-col justify-center">
-        
-        <!-- Header Branding Area -->
-        <header class="text-center mb-8 md:mb-12 animate-fade-in-down">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-accentTeal tracking-wide uppercase mb-3 backdrop-blur-md">
-                <i class="fa-solid fa-sparkles text-xs animate-pulse"></i> High Fidelity Client-Side Engine
+    <!-- Scalable Top Navigation Bar / Page Switcher -->
+    <header class="relative z-20 w-full max-w-7xl mx-auto px-4 pt-6">
+        <div class="glass-panel p-4 rounded-2xl flex flex-col lg:flex-row justify-between items-center gap-4 border-white/10 shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-accentPurple to-accentTeal flex items-center justify-center shadow-lg shadow-accentPurple/25">
+                    <i class="fa-solid fa-layer-group text-darkBg font-bold text-lg"></i>
+                </div>
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-accentTeal tracking-wide uppercase">
+                        <span class="w-1.5 h-1.5 rounded-full bg-accentTeal animate-pulse"></span> Client Sandbox v2.5
+                    </div>
+                    <span class="font-bold text-sm tracking-wide text-white block">CineMerge Studio</span>
+                </div>
             </div>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-white via-[#d1c4e9] to-accentPurple bg-clip-text text-transparent">
-                CineMerge Studio
-            </h1>
-            <p class="text-gray-400 mt-3 text-sm md:text-base max-w-xl mx-auto">
-                Real-time audio track multiplexing directly inside your browser. No server uploads. Absolute data security with interactive audio preview controls.
-            </p>
-        </header>
+            
+            <!-- Modern media suite navigation system -->
+            <nav class="flex flex-wrap items-center justify-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5">
+                <button id="nav-workspace" class="px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all text-accentTeal bg-white/5 border border-white/10">
+                    <i class="fa-solid fa-photo-film"></i> Workspace
+                </button>
+                <div class="w-px h-4 bg-white/10 mx-1 hidden sm:block"></div>
+                <button id="nav-trimmer" class="px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-scissors"></i> Audio Trimmer
+                </button>
+                <button id="nav-audmerger" class="px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-shuffle"></i> Audio Merger
+                </button>
+                <button id="nav-vidmerger" class="px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-video"></i> Video Merger
+                </button>
+                <button id="nav-audenhancer" class="px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Audio Enhance
+                </button>
+                <button id="nav-videnhancer" class="px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-bolt"></i> Video Enhance
+                </button>
+            </nav>
+        </div>
+    </header>
 
-        <!-- Main Workspace Interface -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="relative z-10 w-full max-w-7xl mx-auto px-4 py-6 md:py-8 flex-grow flex flex-col justify-center">
+        
+        <!-- Workspace View (Active Page) -->
+        <div id="view-studio" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             <!-- Left Workspace Pane: Media Uploads and Previews (Col 7) -->
             <section class="lg:col-span-7 space-y-6">
@@ -216,8 +266,8 @@
                         <button id="change-video-btn" class="absolute top-4 right-4 z-30 bg-black/60 hover:bg-black/80 border border-white/15 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
                             <i class="fa-solid fa-arrow-rotate-left"></i> Swap Video
                         </button>
-                        <!-- Integrated Real-time Video Metadata Display -->
-                        <div id="video-metadata" class="p-3 bg-black/80 border-t border-white/5 flex flex-wrap justify-between items-center text-xs text-gray-400 gap-2">
+                        <!-- Real-Time Video Metadata Display with MB Calculations -->
+                        <div id="video-metadata" class="hidden p-3 bg-black/80 border-t border-white/5 flex flex-wrap justify-between items-center text-xs text-gray-400 gap-2">
                             <span id="video-file-name" class="truncate font-semibold text-gray-300 max-w-[60%]"></span>
                             <span id="video-file-size" class="font-mono bg-accentPurple/10 text-accentPurple px-2.5 py-1 rounded-md border border-accentPurple/20">0.00 MB</span>
                         </div>
@@ -327,42 +377,63 @@
 
             <!-- Right Workspace Pane: DSP Matrix Controls (Col 5) -->
             <section class="lg:col-span-5 space-y-6">
-                <div class="glass-panel p-6 rounded-3xl space-y-6">
+                <div class="glass-panel p-6 rounded-3xl space-y-6 font-sans">
                     <h2 class="text-lg font-bold flex items-center gap-2 border-b border-white/10 pb-4">
                         <i class="fa-solid fa-sliders text-accentPurple"></i> Mixing & DSP Parameters
                     </h2>
 
-                    <!-- Mixing Mode Dropdown -->
+                    <!-- Streamlined Mixing Mode Dropdown -->
                     <div class="space-y-2">
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider">
                             Audio Mixing Mode
                         </label>
                         <div class="relative">
                             <select id="mix-mode" class="w-full bg-black/60 border border-white/15 focus:border-accentPurple rounded-xl px-4 py-3.5 text-sm text-gray-200 outline-none appearance-none cursor-pointer transition-all">
-                                <option value="replace">Replace Original Audio Track</option>
-                                <option value="mix" selected>Overlay / Combine with Original Video Audio</option>
-                                <option value="dialogue">Vocals & Dialogue Isolation Enhancement</option>
+                                <option value="replace" selected>Replace Original Audio Track</option>
+                                <option value="mix">Overlay / Combine with Original Video Audio</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
                                 <i class="fa-solid fa-chevron-down text-xs"></i>
                             </div>
                         </div>
                         <p class="text-[11px] text-gray-500 leading-normal">
-                            Choose how target elements interact with source frames. Overlay preserves environmental audio channels.
+                            Choose how target elements interact with source frames. Original tracks are fully suppressed or isolated according to layout parameters.
                         </p>
                     </div>
 
-                    <!-- Volume Matrix Range Sliders -->
+                    <!-- Enhanced Volume Matrix with Precise Number Input Integration -->
                     <div class="space-y-4">
                         <div class="space-y-2">
                             <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wider">
                                 <span>Output Track Gain Amplitude</span>
-                                <span id="vol-percentage" class="text-accentTeal font-bold">100%</span>
+                                <div class="flex items-center gap-1.5">
+                                    <input id="vol-number" type="number" min="0" max="200" value="100" class="w-16 bg-black/60 border border-white/10 rounded-lg py-1 px-1.5 text-center text-accentTeal font-bold font-mono text-xs focus:border-accentTeal focus:outline-none">
+                                    <span class="text-gray-400 text-xs font-bold">%</span>
+                                </div>
                             </div>
                             <div class="flex items-center gap-4 bg-black/40 p-3 rounded-xl border border-white/5">
                                 <i class="fa-solid fa-volume-low text-gray-500 text-sm"></i>
                                 <input id="vol-slider" type="range" min="0" max="200" value="100" class="premium-slider flex-grow">
                                 <i class="fa-solid fa-volume-high text-gray-400 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Smart Audio Looping Control Switch -->
+                    <div class="space-y-2 pt-2">
+                        <div class="flex items-center justify-between bg-black/40 p-4 rounded-xl border border-white/5 transition-colors hover:border-white/10 relative">
+                            <div class="space-y-0.5">
+                                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-arrows-spin text-accentTeal text-[10px]"></i> Loop Audio to Fit Video
+                                </label>
+                                <p class="text-[10px] text-gray-500">Repeats the audio track seamlessly if video is longer.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span id="auto-loop-badge" class="hidden text-[9px] bg-accentTeal/10 border border-accentTeal/30 text-accentTeal font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Auto On</span>
+                                <label class="relative inline-flex items-center cursor-pointer select-none">
+                                    <input type="checkbox" id="loop-audio-toggle" class="sr-only peer">
+                                    <div class="w-10 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accentTeal"></div>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -386,9 +457,6 @@
                                 <h4 id="status-title" class="text-sm font-semibold text-gray-200">Multiplexing Audio Tracks...</h4>
                                 <p class="text-xs text-gray-400">Processing locally inside sandbox. Keep active to avoid latency drops.</p>
                             </div>
-                            <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                                <div id="status-progress-bar" class="bg-gradient-to-r from-accentPurple to-accentTeal h-full w-0 transition-all duration-150"></div>
-                            </div>
 
                             <!-- Abort/Cancel Button -->
                             <button id="btn-cancel-merge" class="w-full py-2.5 px-4 rounded-xl border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 text-red-200 text-xs font-semibold transition-all flex items-center justify-center gap-2 mt-2">
@@ -411,14 +479,169 @@
                                 <video id="merged-preview-player" controls class="w-full h-auto aspect-video object-contain"></video>
                             </div>
 
-                            <button id="btn-download" class="glow-button w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-sm shadow-lg shadow-accentTeal/10 hover:shadow-accentTeal/30 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-cloud-arrow-down"></i> Download Enhanced Video
-                            </button>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                                <button id="btn-download" class="glow-button w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-xs shadow-lg shadow-accentTeal/10 hover:shadow-accentTeal/35 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> Download Video
+                                </button>
+                                <button id="btn-reupload" class="w-full py-3.5 px-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-rotate-left"></i> Try Again / Reset
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                 </div>
             </section>
+        </div>
+
+        <!-- Future Feature Roadmaps / Alternative Sandbox Views -->
+        <div id="view-trimmer" class="hidden max-w-4xl mx-auto">
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-xl">
+                        <i class="fa-solid fa-scissors"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">Spectral Audio Trimmer</h2>
+                        <p class="text-xs text-gray-400">Prune frequencies and clamp amplitude lengths down with precision milliseconds control.</p>
+                    </div>
+                </div>
+                <!-- Interactive Waveform Sandbox -->
+                <div class="p-6 bg-black/40 rounded-2xl border border-white/5 space-y-4">
+                    <span class="text-xs font-bold text-accentPurple uppercase tracking-wider block">Interactive Waveform Shaver</span>
+                    <div class="h-24 bg-black/60 rounded-xl border border-white/5 flex items-end justify-between p-2 gap-0.5 relative overflow-hidden">
+                        <div class="absolute inset-y-0 left-12 w-0.5 bg-red-500 z-10 animate-pulse"></div>
+                        <div class="absolute inset-y-0 right-24 w-0.5 bg-red-500 z-10 animate-pulse"></div>
+                        <div class="absolute inset-y-0 left-0 right-0 bg-accentPurple/5"></div>
+                        <!-- Wave bars -->
+                        <div class="w-1 h-12 bg-white/10 rounded"></div><div class="w-1 h-16 bg-white/10 rounded"></div><div class="w-1 h-8 bg-white/20 rounded"></div>
+                        <div class="w-1 h-14 bg-accentTeal rounded"></div><div class="w-1 h-20 bg-accentTeal rounded"></div><div class="w-1 h-12 bg-accentTeal rounded"></div>
+                        <div class="w-1 h-18 bg-accentTeal rounded"></div><div class="w-1 h-10 bg-accentTeal rounded"></div><div class="w-1 h-16 bg-accentTeal rounded"></div>
+                        <div class="w-1 h-22 bg-accentTeal rounded"></div><div class="w-1 h-14 bg-accentTeal rounded"></div><div class="w-1 h-8 bg-accentTeal rounded"></div>
+                        <div class="w-1 h-16 bg-white/10 rounded"></div><div class="w-1 h-10 bg-white/10 rounded"></div><div class="w-1 h-12 bg-white/10 rounded"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-gray-400">
+                        <span>Clipping Boundaries: <strong class="text-accentTeal font-mono">0:12.4s - 0:48.1s</strong></span>
+                        <span class="bg-accentTeal/15 text-accentTeal font-bold px-2 py-0.5 rounded">Active Range</span>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-accentTeal/5 border border-accentTeal/15 text-center text-xs text-accentTeal flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i> Audio Trimming functionality is currently integrated in Step 2 of the main Workspace.
+                </div>
+            </div>
+        </div>
+
+        <div id="view-audmerger" class="hidden max-w-4xl mx-auto">
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-xl">
+                        <i class="fa-solid fa-shuffle"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">Multi-Track Audio Merger</h2>
+                        <p class="text-xs text-gray-400">Combine multiple acoustic tracks into a single unified stereo masterpiece sequentially.</p>
+                    </div>
+                </div>
+                <div class="p-5 bg-black/40 rounded-2xl border border-white/5 space-y-4">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block">Sequence Track Pipeline</span>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                            <span class="text-xs font-bold text-gray-300"><i class="fa-solid fa-file-audio text-accentPurple mr-2"></i> TrackA_Acoustic_Guitar.mp3</span>
+                            <span class="text-xs font-mono text-gray-500">03:45s</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                            <span class="text-xs font-bold text-gray-300"><i class="fa-solid fa-file-audio text-accentTeal mr-2"></i> TrackB_Ambient_Pad.mp3</span>
+                            <span class="text-xs font-mono text-gray-500">02:10s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-white/5 border border-white/10 text-center text-xs text-gray-400 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock"></i> High-definition Audio Merger timeline sequencing releasing in next minor release.
+                </div>
+            </div>
+        </div>
+
+        <div id="view-vidmerger" class="hidden max-w-4xl mx-auto">
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-xl">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">Video Clip Merger</h2>
+                        <p class="text-xs text-gray-400">Join separate video assets sequentially without losing visual codecs or resolution matrices.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 bg-black/40 border border-white/5 rounded-xl text-center">
+                        <i class="fa-solid fa-film text-3xl text-accentPurple/75 mb-2"></i>
+                        <h4 class="text-xs font-bold text-gray-200">Clip 1 - Intro.mp4</h4>
+                        <span class="text-[10px] text-gray-500">1080p @ 60 FPS</span>
+                    </div>
+                    <div class="p-4 bg-black/40 border border-white/5 rounded-xl text-center">
+                        <i class="fa-solid fa-film text-3xl text-accentTeal/75 mb-2"></i>
+                        <h4 class="text-xs font-bold text-gray-200">Clip 2 - MainScene.webm</h4>
+                        <span class="text-[10px] text-gray-500">1080p @ 60 FPS</span>
+                    </div>
+                </div>
+                <div class="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-center text-xs text-amber-300/80 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-hourglass-half"></i> Hardware-accelerated clip stitch rendering is under beta testing.
+                </div>
+            </div>
+        </div>
+
+        <div id="view-audenhancer" class="hidden max-w-4xl mx-auto">
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-xl">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">Audio Enhancement Console</h2>
+                        <p class="text-xs text-gray-400">Spectral noise reduction, vocals leveling, and clarity booster matrix.</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-4 bg-black/40 border border-white/5 rounded-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold text-gray-200 uppercase tracking-wider block">AI Speech Isolation</span>
+                            <p class="text-[10px] text-gray-500">Isolate vocals from heavy surrounding noise structures.</p>
+                        </div>
+                        <input type="checkbox" checked class="w-4 h-4 accent-accentTeal">
+                    </div>
+                    <div class="p-4 bg-black/40 border border-white/5 rounded-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold text-gray-200 uppercase tracking-wider block">Spectral Noise Gate</span>
+                            <p class="text-[10px] text-gray-500">Cut-off decibels under custom room ambient baselines.</p>
+                        </div>
+                        <input type="range" class="w-24 bg-white/20 h-1.5 rounded" min="0" max="100" value="80">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-videnhancer" class="hidden max-w-4xl mx-auto">
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-xl">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">Super-Resolution Video Enhancement</h2>
+                        <p class="text-xs text-gray-400">Bicubic visual upscale and contrast-limited adaptive histogram equalizer engine.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-5 bg-white/5 border border-white/15 rounded-2xl relative overflow-hidden">
+                        <span class="absolute top-2 left-2 text-[10px] bg-red-500 text-white font-bold px-1.5 py-0.5 rounded">Before</span>
+                        <div class="aspect-video bg-black/40 rounded border border-white/5 flex items-center justify-center text-[10px] text-gray-500">[Low-Res Sample Frame]</div>
+                    </div>
+                    <div class="p-5 bg-accentTeal/5 border border-accentTeal/15 rounded-2xl relative overflow-hidden">
+                        <span class="absolute top-2 left-2 text-[10px] bg-accentTeal text-darkBg font-bold px-1.5 py-0.5 rounded">Enhanced</span>
+                        <div class="aspect-video bg-black/40 rounded border border-white/5 flex items-center justify-center text-[10px] text-accentTeal">[4K Upscaled Crystal Frame]</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
@@ -521,13 +744,51 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
+        /* ==========================================================
+           2. NAVIGATION BAR CONTROL OVERHAUL & DELEGATION
+           ========================================================== */
+        const navWorkspace = document.getElementById('nav-workspace');
+        const navTrimmer = document.getElementById('nav-trimmer');
+        const navAudMerger = document.getElementById('nav-audmerger');
+        const navVidMerger = document.getElementById('nav-vidmerger');
+        const navAudEnhancer = document.getElementById('nav-audenhancer');
+        const navVidEnhancer = document.getElementById('nav-videnhancer');
+
+        const viewStudio = document.getElementById('view-studio');
+        const viewTrimmer = document.getElementById('view-trimmer');
+        const viewAudMerger = document.getElementById('view-audmerger');
+        const viewVidMerger = document.getElementById('view-vidmerger');
+        const viewAudEnhancer = document.getElementById('view-audenhancer');
+        const viewVidEnhancer = document.getElementById('view-videnhancer');
+
+        const navElements = [navWorkspace, navTrimmer, navAudMerger, navVidMerger, navAudEnhancer, navVidEnhancer];
+        const viewsList = [viewStudio, viewTrimmer, viewAudMerger, viewVidMerger, viewAudEnhancer, viewVidEnhancer];
+
+        function selectToolTab(activeButton, activeView) {
+            navElements.forEach(btn => {
+                btn.className = "px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white";
+            });
+            viewsList.forEach(view => view.classList.add('hidden'));
+
+            activeButton.className = "px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all text-accentTeal bg-white/5 border border-white/10";
+            activeView.classList.remove('hidden');
+        }
+
+        navWorkspace.addEventListener('click', () => selectToolTab(navWorkspace, viewStudio));
+        navTrimmer.addEventListener('click', () => selectToolTab(navTrimmer, viewTrimmer));
+        navAudMerger.addEventListener('click', () => selectToolTab(navAudMerger, viewAudMerger));
+        navVidMerger.addEventListener('click', () => selectToolTab(navVidMerger, viewVidMerger));
+        navAudEnhancer.addEventListener('click', () => selectToolTab(navAudEnhancer, viewAudEnhancer));
+        navVidEnhancer.addEventListener('click', () => selectToolTab(navVidEnhancer, viewVidEnhancer));
+
 
         /* ==========================================================
-           2. STREAM PIPELINES & USER INTERFACE MATRIX
+           3. STREAM PIPELINES & USER INTERFACE MATRIX
            ========================================================== */
         let stateVideo = null;
         let stateAudio = null;
         let originalVideoName = '';
+        let hasCompletedMerge = false; // State track for contextual re-processing after swap
 
         let currentVideoObjectURL = '';
         let currentAudioObjectURL = '';
@@ -566,9 +827,11 @@
 
         // Mixer Elements
         const volSlider = document.getElementById('vol-slider');
-        const volPercentage = document.getElementById('vol-percentage');
+        const volNumber = document.getElementById('vol-number');
         const mixModeSelect = document.getElementById('mix-mode');
         const btnMerge = document.getElementById('btn-merge');
+        const loopAudioToggle = document.getElementById('loop-audio-toggle');
+        const autoLoopBadge = document.getElementById('auto-loop-badge');
 
         // Badges Elements
         const videoBadge = document.getElementById('video-badge');
@@ -579,10 +842,10 @@
         const processWindow = document.getElementById('process-window');
         const btnCancelMerge = document.getElementById('btn-cancel-merge');
         const completedWindow = document.getElementById('completed-window');
-        const statusProgressBar = document.getElementById('status-progress-bar');
         const statusTitle = document.getElementById('status-title');
         const mergedPreviewPlayer = document.getElementById('merged-preview-player');
         const btnDownload = document.getElementById('btn-download');
+        const btnReupload = document.getElementById('btn-reupload');
 
         // Setup File Drop Event Listeners
         ['dragenter', 'dragover'].forEach(name => {
@@ -625,29 +888,33 @@
             }
         });
 
-        // 2.1 Handling Video Sub-Engine Configuration
+        // 2.1 Handling Video Sub-Engine Configuration with Auto-Audio Clear
         function handleVideoImport(file) {
             if (!file.type.startsWith('video/')) {
                 displayToast('Invalid media type. Please select an MP4 or WebM video format.');
                 return;
             }
+
+            // AUTO-CLEAR EXISITING AUDIO LAYER ON VIDEO SWAP
+            if (stateAudio) {
+                clearAudioTrack();
+                displayToast('Video swapped. Audio layer cleared to prevent sync mismatches.');
+            }
+
             stateVideo = file;
             originalVideoName = file.name;
             videoDropzone.classList.add('hidden');
             videoPreviewFrame.classList.remove('hidden');
 
-            // Set and render calculated video file size values (MB)
             const videoMetadata = document.getElementById('video-metadata');
             const videoFileNameEl = document.getElementById('video-file-name');
             const videoFileSizeEl = document.getElementById('video-file-size');
-            
+
             if (videoMetadata && videoFileNameEl && videoFileSizeEl) {
                 videoMetadata.classList.remove('hidden');
                 videoFileNameEl.innerText = file.name;
-                
-                // Absolute MB Calculation
-                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-                videoFileSizeEl.innerText = `${sizeInMB} MB`;
+                const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                videoFileSizeEl.innerText = `${fileSizeInMB} MB`;
             }
 
             // Video loaded status symbol update
@@ -662,13 +929,10 @@
             // Synced Volume logic
             updatePreviewVolume();
             verifyIntegrationReadiness();
-            
-            // Re-apply Audio trimming calculations if Audio is already loaded
-            if (stateAudio) {
-                applyAudioTrimmingCalculations();
-            }
+            triggerReProcessState();
         }
 
+        // 2.2 Audio file imports and trigger loop parameters
         function handleAudioImport(file) {
             if (!file.type.startsWith('audio/') && !file.name.endsWith('.mp3')) {
                 displayToast('Invalid configuration. Please load a valid audio track sequence.');
@@ -694,11 +958,24 @@
 
             updatePreviewVolume();
             verifyIntegrationReadiness();
+            triggerReProcessState();
         }
 
         // 2.3 Audio Preview Control Pipeline & dynamic trim checking
         audioPreviewPlayer.onloadedmetadata = () => {
             applyAudioTrimmingCalculations(true); // reset custom slider boundaries to full track scope on fresh load
+            
+            // METADATA DRIVEN AUDIO LOOP AUTOMATION
+            if (stateVideo && videoPlayer.duration && audioPreviewPlayer.duration) {
+                if (videoPlayer.duration > audioPreviewPlayer.duration) {
+                    loopAudioToggle.checked = true;
+                    autoLoopBadge.classList.remove('hidden');
+                    displayToast('Looping activated: Video length exceeds audio soundtrack.');
+                } else {
+                    loopAudioToggle.checked = false;
+                    autoLoopBadge.classList.add('hidden');
+                }
+            }
         };
 
         function applyAudioTrimmingCalculations(resetSliders = false) {
@@ -758,6 +1035,7 @@
             }
             audioPreviewPlayer.currentTime = startVal; // Seek target for instant auditory feedback
             applyAudioTrimmingCalculations();
+            triggerReProcessState();
         });
 
         trimEndSlider.addEventListener('input', () => {
@@ -769,6 +1047,7 @@
             }
             audioPreviewPlayer.currentTime = endVal; // Seek target for instant auditory feedback
             applyAudioTrimmingCalculations();
+            triggerReProcessState();
         });
 
         audioPreviewPlayer.ontimeupdate = () => {
@@ -833,7 +1112,26 @@
             return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
 
-        // 2.4 Reset Actions / Swapping Assets
+        // Shared Modular Audio Session Clear Helper
+        function clearAudioTrack() {
+            stateAudio = null;
+            audioPreviewPlayer.pause();
+            audioPreviewPlayer.removeAttribute('src');
+            audioPreviewPlayer.load();
+            audioPreviewFrame.classList.add('hidden');
+            audioDropzone.classList.remove('hidden');
+
+            // Reset audio badges status
+            audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
+            audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track';
+            audioTrimBadge.classList.add('hidden');
+
+            audioInput.value = '';
+            autoLoopBadge.classList.add('hidden');
+            verifyIntegrationReadiness();
+        }
+
+        // Reset Actions / Swapping Assets
         changeVideoBtn.addEventListener('click', () => {
             stateVideo = null;
             videoPlayer.pause();
@@ -854,6 +1152,7 @@
             videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Video File';
 
             videoInput.value = '';
+            autoLoopBadge.classList.add('hidden');
             verifyIntegrationReadiness();
 
             // Recheck Audio limits as video constraint is removed
@@ -863,26 +1162,47 @@
         });
 
         changeAudioBtn.addEventListener('click', () => {
-            stateAudio = null;
-            audioPreviewPlayer.pause();
-            audioPreviewPlayer.removeAttribute('src');
-            audioPreviewPlayer.load();
-            audioPreviewFrame.classList.add('hidden');
-            audioDropzone.classList.remove('hidden');
-
-            // Reset audio badges status
-            audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
-            audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track';
-            audioTrimBadge.classList.add('hidden');
-
-            audioInput.value = '';
-            verifyIntegrationReadiness();
+            clearAudioTrack();
         });
 
-        // 2.5 Volume matrix update listener
+        // Bi-directional Output Gain Controls (Slider & Number Input link)
         volSlider.addEventListener('input', (e) => {
-            volPercentage.innerText = `${e.target.value}%`;
+            volNumber.value = e.target.value;
             updatePreviewVolume();
+            triggerReProcessState();
+        });
+
+        volNumber.addEventListener('input', (e) => {
+            let inputVal = parseInt(e.target.value);
+            if (isNaN(inputVal)) return; // Allow user to type/delete
+            
+            // Constrain between 0% and 200% limits
+            if (inputVal < 0) inputVal = 0;
+            if (inputVal > 200) inputVal = 200;
+            
+            volNumber.value = inputVal;
+            volSlider.value = inputVal;
+            updatePreviewVolume();
+            triggerReProcessState();
+        });
+
+        volNumber.addEventListener('blur', () => {
+            // Fill empty values upon losing input focus
+            if (volNumber.value === "") {
+                volNumber.value = "100";
+                volSlider.value = "100";
+                updatePreviewVolume();
+                triggerReProcessState();
+            }
+        });
+
+        // Re-process triggers for configuration options
+        mixModeSelect.addEventListener('change', () => {
+            triggerReProcessState();
+        });
+
+        loopAudioToggle.addEventListener('change', () => {
+            triggerReProcessState();
         });
 
         function updatePreviewVolume() {
@@ -904,9 +1224,28 @@
             }
         }
 
+        // Contextual Action Button Shift: Teal-Themed "Re-Process & Merge"
+        function triggerReProcessState() {
+            if (!hasCompletedMerge) return;
+            
+            // Hide completed preview so the user focuses on re-processing
+            completedWindow.classList.add('hidden');
+            
+            // Show the merge button again
+            btnMerge.style.display = 'flex';
+            btnMerge.removeAttribute('disabled');
+            
+            // Update button text and style to Teal theme
+            btnMerge.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin"></i> Re-Process & Merge`;
+            
+            // Remove purple classes, add teal classes
+            btnMerge.className = "glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-base shadow-lg shadow-accentTeal/20 hover:shadow-accentTeal/35 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0";
+        }
+
         // Highlight and formulate waveform with active/trimmed visual sections
         function formulateVisualSignature(trimStart, trimEnd, originalDuration) {
             const barContainer = document.getElementById('waveform-container');
+            if (!barContainer) return;
             barContainer.innerHTML = '';
             const barCount = Math.floor(barContainer.clientWidth / 6) || 45;
 
@@ -935,6 +1274,7 @@
                 const activeBars = barContainer.children;
                 const isPlaying = !audioPreviewPlayer.paused;
                 for (let i = 0; i < activeBars.length; i++) {
+                    if (!activeBars[i]) continue;
                     let dynamicOffset = Math.sin((i / 5) + Date.now() / 200) * 8 + 15;
                     let multiplier = isPlaying ? 1.5 : 0.3;
                     const jitterHeight = Math.max(4, Math.floor(dynamicOffset + (Math.random() * 12 * multiplier)));
@@ -953,7 +1293,7 @@
         }
 
         /* ==========================================================
-           3. CLIENT-SIDE WEB AUDIO & DIRECT STREAM CAPTURE PIPELINE
+           4. CLIENT-SIDE WEB AUDIO & DIRECT STREAM CAPTURE PIPELINE
            ========================================================== */
         let audioCtx;
         let compositionVideoNode;
@@ -974,7 +1314,6 @@
             btnMerge.style.display = 'none';
             completedWindow.classList.add('hidden');
             processWindow.classList.remove('hidden');
-            statusProgressBar.style.width = '0%';
             statusTitle.innerText = 'Initializing local encoders...';
 
             try {
@@ -1001,8 +1340,12 @@
                 compositionAudioNode.style.top = '-9999px';
                 document.body.appendChild(compositionAudioNode);
 
-                // IMPORTANT: Keep elements unmuted to ensure Web Audio gathers decoded output.
-                compositionVideoNode.muted = false;
+                // Analyze Chosen Track Mixing Matrix Mode
+                const chosenMode = mixModeSelect.value;
+
+                // IMPORTANT: If replacing audio, strip the source video soundtrack completely by muting it.
+                // Otherwise, keep it unmuted so the Web Audio context can capture and overlay it.
+                compositionVideoNode.muted = (chosenMode === 'replace');
                 compositionAudioNode.muted = false;
 
                 // Set crossOrigin to avoid potential secure DOM canvas tainting
@@ -1034,8 +1377,7 @@
                 customAudioSource.connect(gainControlNode);
                 gainControlNode.connect(destinationNode);
 
-                // Analyze Chosen Track Mixing Matrix Mode
-                const chosenMode = mixModeSelect.value;
+                // Inject and overlay original track ONLY if mixing mode is not set to replace
                 if (chosenMode !== 'replace') {
                     // Inject and overlay the original video background audio track
                     const originalVideoSource = audioCtx.createMediaElementSource(compositionVideoNode);
@@ -1127,19 +1469,27 @@
                     const durationVid = compositionVideoNode.duration;
                     const currentAudTime = compositionAudioNode.currentTime;
 
-                    // Pause the custom audio node explicitly if it exceeds manual End Trim bounds
-                    if (currentAudTime >= activeTrimEnd) {
-                        compositionAudioNode.pause();
+                    // SMART AUDIO LOOPING LOGIC DURING ENCODING RUN
+                    if (loopAudioToggle.checked) {
+                        if (currentAudTime >= activeTrimEnd || compositionAudioNode.ended) {
+                            compositionAudioNode.currentTime = activeTrimStart;
+                            compositionAudioNode.play().catch(() => {});
+                        }
+                    } else {
+                        // Pause the custom audio node explicitly if it exceeds manual End Trim bounds (when looping is OFF)
+                        if (currentAudTime >= activeTrimEnd) {
+                            compositionAudioNode.pause();
+                        }
                     }
 
                     // CRITICAL DURATION LOCK: Stop recording immediately when the original video ends
                     if (currentVidTime >= durationVid || compositionVideoNode.ended) {
+                        statusTitle.innerText = `Multiplexing: 100%`;
                         terminateStreamsRendering();
                         return;
                     }
 
                     const renderPercentage = (currentVidTime / durationVid) * 100;
-                    statusProgressBar.style.width = `${renderPercentage}%`;
                     statusTitle.innerText = `Multiplexing: ${Math.floor(renderPercentage)}%`;
                 }, 30);
 
@@ -1211,6 +1561,7 @@
 
         // Display Completed State with Rendered Output Preview Player
         function displayFinalizedOverlay(mergedURL) {
+            hasCompletedMerge = true; // Mark as successfully merged at least once
             processWindow.classList.add('hidden');
             completedWindow.classList.remove('hidden');
 
@@ -1231,17 +1582,112 @@
             };
         }
 
+        /* ==========================================================
+           POST-PROCESSING RE-UPLOAD / START NEW PROJECT ACTION
+           ========================================================== */
+        btnReupload.onclick = () => {
+            // Clean physical object streams & memory addresses to prevent leaks
+            stateVideo = null;
+            stateAudio = null;
+            originalVideoName = '';
+            hasCompletedMerge = false; // Reset merge memory marker
+
+            if (currentVideoObjectURL) URL.revokeObjectURL(currentVideoObjectURL);
+            if (currentAudioObjectURL) URL.revokeObjectURL(currentAudioObjectURL);
+            if (currentMergedObjectURL) URL.revokeObjectURL(currentMergedObjectURL);
+
+            currentVideoObjectURL = '';
+            currentAudioObjectURL = '';
+            currentMergedObjectURL = '';
+
+            // Stop preview playing elements
+            videoPlayer.pause();
+            videoPlayer.removeAttribute('src');
+            videoPlayer.load();
+
+            audioPreviewPlayer.pause();
+            audioPreviewPlayer.removeAttribute('src');
+            audioPreviewPlayer.load();
+
+            mergedPreviewPlayer.pause();
+            mergedPreviewPlayer.removeAttribute('src');
+            mergedPreviewPlayer.load();
+
+            // Clear Input Node elements values
+            videoInput.value = '';
+            audioInput.value = '';
+
+            // Clean Display containers and unhide Dropzones
+            videoPreviewFrame.classList.add('hidden');
+            document.getElementById('video-metadata').classList.add('hidden');
+            videoDropzone.classList.remove('hidden');
+
+            audioPreviewFrame.classList.add('hidden');
+            audioDropzone.classList.remove('hidden');
+
+            // Reset Badge configurations
+            videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
+            videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Video File';
+
+            audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
+            audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track';
+            audioTrimBadge.classList.add('hidden');
+            autoLoopBadge.classList.add('hidden');
+
+            // Reset Mixing Control Parameters
+            volSlider.value = "100";
+            volNumber.value = "100";
+            loopAudioToggle.checked = false;
+
+            // Restructure primary merge button style back to defaults
+            btnMerge.style.display = 'block';
+            btnMerge.setAttribute('disabled', 'true');
+            btnMerge.innerHTML = `<i class="fa-solid fa-shuffle"></i> Merge Audio & Video`;
+            btnMerge.className = "glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentPurple to-[#512da8] text-white font-bold text-base shadow-lg shadow-accentPurple/20 hover:shadow-accentPurple/35 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0";
+
+            completedWindow.classList.add('hidden');
+
+            displayToast('Workspace cleared successfully. Load fresh assets to begin composite!');
+        };
+
         // Custom Notification Toast Functionality
         function displayToast(msg) {
             const toastElement = document.createElement('div');
-            toastElement.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-red-600/95 border border-red-500/30 text-white px-5 py-3 rounded-2xl text-sm font-semibold shadow-2xl backdrop-blur-md transition-all duration-300';
-            toastElement.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> ${msg}`;
+            toastElement.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#161a29]/95 border border-accentTeal/30 text-white px-5 py-3 rounded-2xl text-sm font-semibold shadow-2xl backdrop-blur-md transition-all duration-300 flex items-center gap-2';
+            toastElement.innerHTML = `<i class="fa-solid fa-circle-check text-accentTeal"></i> ${msg}`;
             document.body.appendChild(toastElement);
             setTimeout(() => {
                 toastElement.style.opacity = '0';
-                setTimeout(() => document.body.removeChild(toastElement), 400);
+                setTimeout(() => {
+                    if (toastElement.parentNode) {
+                        toastElement.parentNode.removeChild(toastElement);
+                    }
+                }, 400);
             }, 3500);
         }
+
+        /* ==========================================================
+           5. PERSISTENT BROWSER DETECTION INTERFACE INITIALIZER
+           ========================================================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            // Precise Google Chrome check (bypassing Edge, Brave, and other custom Chromium wrappers)
+            const isChrome = /Chrome/.test(navigator.userAgent) && 
+                             /Google Inc/.test(navigator.vendor) && 
+                             !/Edg|OPR|Brave/.test(navigator.userAgent);
+            
+            const warningModal = document.getElementById('browser-warning-modal');
+            const closeWarningBtn = document.getElementById('close-warning-btn');
+            
+            if (!isChrome && warningModal) {
+                warningModal.classList.remove('hidden');
+            }
+            
+            if (closeWarningBtn && warningModal) {
+                closeWarningBtn.addEventListener('click', () => {
+                    warningModal.classList.add('hidden');
+                });
+            }
+        });
     </script>
 </body>
 </html>
