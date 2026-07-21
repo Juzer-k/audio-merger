@@ -2306,7 +2306,18 @@
         window.addEventListener('DOMContentLoaded', () => {
             const ua = navigator.userAgent.toLowerCase();
             const vendor = navigator.vendor ? navigator.vendor.toLowerCase() : '';
-            const isPureChrome = ua.includes('chrome') && vendor.includes('google');
+            
+            const isBrave = !!(navigator.brave && navigator.brave.isBrave);
+            const isEdge = ua.includes('edg') || ua.includes('edge');
+            const isOpera = ua.includes('opr') || ua.includes('opera');
+            const isVivaldi = ua.includes('vivaldi');
+            
+            const isPureChrome = ua.includes('chrome') && 
+                                 vendor.includes('google') && 
+                                 !isEdge && 
+                                 !isOpera && 
+                                 !isVivaldi && 
+                                 !isBrave;
 
             const warningModal = document.getElementById('browser-warning-modal');
             const closeWarningBtn = document.getElementById('close-warning-btn');
