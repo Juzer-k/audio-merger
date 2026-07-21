@@ -1670,15 +1670,25 @@
            5. PERSISTENT BROWSER DETECTION INTERFACE INITIALIZER
            ========================================================== */
         window.addEventListener('DOMContentLoaded', () => {
-            // Precise Google Chrome check (bypassing Edge, Brave, and other custom Chromium wrappers)
-            const isChrome = /Chrome/.test(navigator.userAgent) && 
-                             /Google Inc/.test(navigator.vendor) && 
-                             !/Edg|OPR|Brave/.test(navigator.userAgent);
+            const ua = navigator.userAgent.toLowerCase();
+            const vendor = navigator.vendor ? navigator.vendor.toLowerCase() : '';
             
+            const isBrave = !!(navigator.brave && navigator.brave.isBrave);
+            const isEdge = ua.includes('edg') || ua.includes('edge');
+            const isOpera = ua.includes('opr') || ua.includes('opera');
+            const isVivaldi = ua.includes('vivaldi');
+            
+            const isPureChrome = ua.includes('chrome') && 
+                                 vendor.includes('google') && 
+                                 !isEdge && 
+                                 !isOpera && 
+                                 !isVivaldi && 
+                                 !isBrave;
+
             const warningModal = document.getElementById('browser-warning-modal');
             const closeWarningBtn = document.getElementById('close-warning-btn');
             
-            if (!isChrome && warningModal) {
+            if (!isPureChrome && warningModal) {
                 warningModal.classList.remove('hidden');
             }
             
