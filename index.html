@@ -50,7 +50,7 @@
 
         /* Glassmorphism utility */
         .glass-panel {
-            background: rgba(15, 17, 28, 0.7);
+            background: rgba(15, 17, 28, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -120,10 +120,11 @@
             width: 4px;
             background-color: rgba(124, 77, 255, 0.3);
             border-radius: 9999px;
-            transition: height 0.15s ease, background-color 0.3s ease;
+            transition: height 0.15s ease, background-color 0.3s ease, box-shadow 0.3s ease;
         }
         .wave-bar.active {
             background-color: #00f5d4;
+            box-shadow: 0 0 8px #00f5d4;
         }
 
         /* Loading spinner animations */
@@ -170,11 +171,11 @@
                 </div>
                 <h3 class="text-xl font-bold text-white tracking-wide">Google Chrome Recommended</h3>
                 <p class="text-xs md:text-sm text-gray-300 leading-relaxed">
-                    For proper working of this site, please open it in Chrome. Other browsers may restrict high-fidelity client-side Web Audio synthesis or direct video stream capture APIs.
+                    For optimal high-speed client rendering, please open CineMerge in Google Chrome or a Chromium browser.
                 </p>
                 <div class="pt-2">
                     <button id="close-warning-btn" class="glow-button w-full py-3 px-6 rounded-xl bg-gradient-to-r from-accentPurple to-[#512da8] text-white font-bold text-xs shadow-lg shadow-accentPurple/25 transition-all">
-                        I Understand, Proceed Anyway
+                        I Understand, Proceed
                     </button>
                 </div>
             </div>
@@ -184,7 +185,6 @@
     <!-- Interactive 3D Ambient Space Background -->
     <div id="canvas-container"></div>
 
-    <!-- Scalable Top Navigation Bar / Page Switcher -->
     <header class="relative z-20 w-full max-w-7xl mx-auto px-4 pt-6">
         <div class="glass-panel p-4 rounded-2xl flex flex-col lg:flex-row justify-between items-center gap-4 border-white/10 shadow-lg">
             <div class="flex items-center gap-3">
@@ -202,7 +202,7 @@
             <!-- Modern media suite navigation system -->
             <nav class="flex flex-wrap items-center justify-center gap-1.5 bg-black/40 p-1.5 rounded-xl border border-white/5">
                 <button id="nav-workspace" class="px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all text-accentTeal bg-white/5 border border-white/10">
-                    <i class="fa-solid fa-photo-film"></i> Workspace
+                    <i class="fa-solid fa-photo-film"></i> AudioOverlay Pro
                 </button>
                 <div class="w-px h-4 bg-white/10 mx-1 hidden sm:block"></div>
                 <button id="nav-trimmer" class="px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white">
@@ -224,10 +224,9 @@
         </div>
     </header>
 
-    <!-- Main Dynamic Content Wrapper -->
     <main class="relative z-10 w-full max-w-7xl mx-auto px-4 py-6 md:py-8 flex-grow flex flex-col justify-center">
         
-        <!-- Workspace View (Active Page) -->
+        <!-- AudioOverlay Pro Workspace View -->
         <div id="view-studio" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             <!-- Left Workspace Pane: Media Uploads and Previews (Col 7) -->
@@ -266,7 +265,7 @@
                         <button id="change-video-btn" class="absolute top-4 right-4 z-30 bg-black/60 hover:bg-black/80 border border-white/15 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors">
                             <i class="fa-solid fa-arrow-rotate-left"></i> Swap Video
                         </button>
-                        <!-- Real-Time Video Metadata Display with MB Calculations -->
+                        <!-- Real-Time Video Metadata Display -->
                         <div id="video-metadata" class="hidden p-3 bg-black/80 border-t border-white/5 flex flex-wrap justify-between items-center text-xs text-gray-400 gap-2">
                             <span id="video-file-name" class="truncate font-semibold text-gray-300 max-w-[60%]"></span>
                             <span id="video-file-size" class="font-mono bg-accentPurple/10 text-accentPurple px-2.5 py-1 rounded-md border border-accentPurple/20">0.00 MB</span>
@@ -274,7 +273,7 @@
                     </div>
                 </div>
 
-                <!-- Audio Track Section Card with Embedded Audio Preview & Custom Trimming -->
+                <!-- Audio Track Section Card -->
                 <div class="glass-panel p-6 rounded-3xl">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-bold flex items-center gap-2">
@@ -282,11 +281,11 @@
                         </h2>
                         
                         <div class="flex items-center gap-2">
-                            <!-- Trim Status Badge Symbol -->
-                            <span id="audio-trim-badge" class="hidden text-xs px-2.5 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-semibold flex items-center gap-1 animate-bounce">
+                            <!-- Trim Status Badge -->
+                            <span id="audio-trim-badge" class="hidden text-xs px-2.5 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 font-semibold flex items-center gap-1">
                                 <i class="fa-solid fa-scissors"></i> Trim Applied
                             </span>
-                            <!-- Audio Status Badge Symbol -->
+                            <!-- Audio Status Badge -->
                             <span id="audio-badge" class="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5">
                                 <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track
                             </span>
@@ -308,7 +307,7 @@
                         </div>
                     </div>
 
-                    <!-- Enhanced Audio Player Preview Container -->
+                    <!-- Audio Player Preview Container -->
                     <div id="audio-preview-frame" class="hidden mt-4 p-5 rounded-2xl border border-white/10 bg-black/40 space-y-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3 min-w-0">
@@ -325,24 +324,23 @@
                             </button>
                         </div>
                         
-                        <!-- Internal Audio Preview Object -->
+                        <!-- Internal Audio Preview Element -->
                         <audio id="audio-preview-player" class="hidden"></audio>
 
-                        <!-- Audio Progress Slider Scrub Controller -->
+                        <!-- Audio Scrub Controller -->
                         <div class="flex items-center gap-3">
                             <span id="audio-current-time" class="text-[11px] font-mono text-gray-400">0:00</span>
                             <input id="audio-scrub-slider" type="range" min="0" max="100" value="0" class="premium-slider flex-grow h-1.5 bg-white/10">
                             <span id="audio-duration" class="text-[11px] font-mono text-gray-400">0:00</span>
                         </div>
 
-                        <!-- Collapsible Custom Manual Trim Settings Section -->
+                        <!-- Manual Trim Drawer -->
                         <div class="border-t border-white/10 pt-3 mt-2">
                             <button id="toggle-trim-btn" class="text-xs font-semibold text-accentTeal hover:text-white flex items-center gap-1.5 transition-colors focus:outline-none">
                                 <i class="fa-solid fa-scissors"></i> Manual Trim Settings <i id="trim-arrow" class="fa-solid fa-chevron-down text-[10px] transition-transform"></i>
                             </button>
                             
                             <div id="trim-controls-drawer" class="hidden mt-3 space-y-3 bg-black/30 p-3.5 rounded-xl border border-white/5">
-                                <!-- Start Trim Slider -->
                                 <div class="space-y-1.5">
                                     <div class="flex justify-between items-center text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
                                         <span>Start Trim Offset</span>
@@ -351,7 +349,6 @@
                                     <input id="trim-start-slider" type="range" min="0" max="100" value="0" step="0.1" class="premium-slider h-1">
                                 </div>
 
-                                <!-- End Trim Slider -->
                                 <div class="space-y-1.5">
                                     <div class="flex justify-between items-center text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
                                         <span>End Trim Cutoff</span>
@@ -367,8 +364,8 @@
                             <p class="text-xs text-gray-400 mb-2 flex items-center gap-1.5 font-medium uppercase tracking-wider">
                                 <span id="waveform-status-indicator" class="w-2 h-2 rounded-full bg-gray-600"></span> Track Signal Signature
                             </p>
-                            <div id="waveform-container" class="h-16 flex items-end justify-between gap-1 px-1 bg-black/60 rounded-xl border border-white/5">
-                                <!-- Generated Bars dynamic styling inserted here -->
+                            <div id="waveform-container" class="h-16 flex items-end justify-between gap-1 px-1 bg-black/60 rounded-xl border border-white/5 relative overflow-hidden">
+                                <!-- Generated Bars inserted dynamically -->
                             </div>
                         </div>
                     </div>
@@ -382,26 +379,28 @@
                         <i class="fa-solid fa-sliders text-accentPurple"></i> Mixing & DSP Parameters
                     </h2>
 
-                    <!-- Streamlined Mixing Mode Dropdown -->
-                    <div class="space-y-2">
+                    <!-- Audio Mixing Mode Segmented Selector -->
+                    <div class="space-y-2.5">
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider">
                             Audio Mixing Mode
                         </label>
-                        <div class="relative">
-                            <select id="mix-mode" class="w-full bg-black/60 border border-white/15 focus:border-accentPurple rounded-xl px-4 py-3.5 text-sm text-gray-200 outline-none appearance-none cursor-pointer transition-all">
-                                <option value="replace" selected>Replace Original Audio Track</option>
-                                <option value="mix">Overlay / Combine with Original Video Audio</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
-                                <i class="fa-solid fa-chevron-down text-xs"></i>
-                            </div>
+                        <div class="grid grid-cols-2 gap-2 p-1.5 bg-black/60 rounded-2xl border border-white/10">
+                            <button type="button" id="mix-option-replace" class="py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all bg-accentPurple/20 border border-accentPurple/50 text-white shadow-lg shadow-accentPurple/15">
+                                <i class="fa-solid fa-volume-xmark text-accentTeal"></i>
+                                <span>Replace Audio</span>
+                            </button>
+                            <button type="button" id="mix-option-mix" class="py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all bg-transparent border border-transparent text-gray-400 hover:text-white">
+                                <i class="fa-solid fa-layer-group text-accentPurple"></i>
+                                <span>Overlay / Mix</span>
+                            </button>
                         </div>
-                        <p class="text-[11px] text-gray-500 leading-normal">
-                            Choose how target elements interact with source frames. Original tracks are fully suppressed or isolated according to layout parameters.
+                        <input type="hidden" id="mix-mode" value="replace">
+                        <p id="mix-mode-description" class="text-[11px] text-gray-400 leading-normal">
+                            Suppresses original video soundtrack and completely replaces it with your custom audio overlay.
                         </p>
                     </div>
 
-                    <!-- Enhanced Volume Matrix with Precise Number Input Integration -->
+                    <!-- Volume Matrix with Precise Number Input Integration -->
                     <div class="space-y-4">
                         <div class="space-y-2">
                             <div class="flex justify-between items-center text-xs font-bold text-gray-400 uppercase tracking-wider">
@@ -419,14 +418,14 @@
                         </div>
                     </div>
 
-                    <!-- Smart Audio Looping Control Switch -->
+                    <!-- Audio Looping Switch -->
                     <div class="space-y-2 pt-2">
                         <div class="flex items-center justify-between bg-black/40 p-4 rounded-xl border border-white/5 transition-colors hover:border-white/10 relative">
                             <div class="space-y-0.5">
                                 <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
                                     <i class="fa-solid fa-arrows-spin text-accentTeal text-[10px]"></i> Loop Audio to Fit Video
                                 </label>
-                                <p class="text-[10px] text-gray-500">Repeats the audio track seamlessly if video is longer.</p>
+                                <p class="text-[10px] text-gray-500">Repeats the audio track seamlessly if video duration exceeds soundtrack.</p>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span id="auto-loop-badge" class="hidden text-[9px] bg-accentTeal/10 border border-accentTeal/30 text-accentTeal font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Auto On</span>
@@ -438,13 +437,13 @@
                         </div>
                     </div>
 
-                    <!-- Action Control Modules -->
+                    <!-- Action Modules -->
                     <div class="pt-4 border-t border-white/10 space-y-4">
                         <button id="btn-merge" class="glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentPurple to-[#512da8] text-white font-bold text-base shadow-lg shadow-accentPurple/20 hover:shadow-accentPurple/35 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0" disabled>
                             <i class="fa-solid fa-shuffle"></i> Merge Audio & Video
                         </button>
 
-                        <!-- Dynamic Real-Time Status Render Window with Cancel Action button -->
+                        <!-- Process Window -->
                         <div id="process-window" class="hidden p-5 rounded-2xl border border-accentTeal/20 bg-accentTeal/[0.02] text-center space-y-4">
                             <div class="relative w-16 h-16 mx-auto">
                                 <div class="absolute inset-0 spin-cw border-2 border-t-accentTeal border-r-transparent border-b-transparent border-l-transparent rounded-full"></div>
@@ -458,13 +457,12 @@
                                 <p class="text-xs text-gray-400">Processing locally inside sandbox. Keep active to avoid latency drops.</p>
                             </div>
 
-                            <!-- Abort/Cancel Button -->
                             <button id="btn-cancel-merge" class="w-full py-2.5 px-4 rounded-xl border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 text-red-200 text-xs font-semibold transition-all flex items-center justify-center gap-2 mt-2">
                                 <i class="fa-solid fa-circle-stop"></i> Cancel Rendering
                             </button>
                         </div>
 
-                        <!-- Completed Stream Output Area with Merged Preview -->
+                        <!-- Completed Window -->
                         <div id="completed-window" class="hidden p-5 rounded-2xl border border-accentTeal/20 bg-accentTeal/[0.04] text-center space-y-4">
                             <div class="w-12 h-12 rounded-full bg-accentTeal/10 border border-accentTeal/30 flex items-center justify-center text-accentTeal mx-auto text-lg shadow-lg shadow-accentTeal/10">
                                 <i class="fa-solid fa-check"></i>
@@ -474,7 +472,6 @@
                                 <p class="text-xs text-gray-400 mt-1">Review the fully merged output player below</p>
                             </div>
                             
-                            <!-- Merged Output Preview Frame -->
                             <div class="rounded-xl overflow-hidden border border-accentTeal/20 bg-black shadow-inner shadow-black relative">
                                 <video id="merged-preview-player" controls class="w-full h-auto aspect-video object-contain"></video>
                             </div>
@@ -494,43 +491,233 @@
             </section>
         </div>
 
-        <!-- Future Feature Roadmaps / Alternative Sandbox Views -->
-        <div id="view-trimmer" class="hidden max-w-4xl mx-auto">
-            <div class="glass-panel p-8 rounded-3xl space-y-6">
-                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
-                    <div class="w-12 h-12 rounded-xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-xl">
-                        <i class="fa-solid fa-scissors"></i>
+        <div id="view-trimmer" class="hidden max-w-5xl mx-auto space-y-6">
+            
+            <!-- Trimmer Top Card -->
+            <div class="glass-panel p-6 rounded-3xl space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-accentTeal to-accentPurple flex items-center justify-center text-darkBg font-bold text-xl shadow-lg shadow-accentTeal/20">
+                            <i class="fa-solid fa-scissors"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                                Spectral Audio Trimmer
+                                <span class="text-[10px] bg-accentTeal/20 text-accentTeal border border-accentTeal/40 px-2 py-0.5 rounded-full uppercase font-bold">Isolated Sandbox</span>
+                            </h2>
+                            <p class="text-xs text-gray-400">Precision millisecond trimming, beat-synced waveform analysis, and multi-format audio export.</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-xl font-bold">Spectral Audio Trimmer</h2>
-                        <p class="text-xs text-gray-400">Prune frequencies and clamp amplitude lengths down with precision milliseconds control.</p>
+                    
+                    <span id="trimmer-status-badge" class="self-start md:self-auto text-xs px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track
+                    </span>
+                </div>
+
+                <!-- Dropzone -->
+                <div id="trimmer-dropzone" class="upload-zone border-2 border-dashed border-white/15 hover:border-accentTeal rounded-2xl p-10 text-center cursor-pointer bg-white/[0.01] relative">
+                    <input type="file" id="trimmer-input" accept="audio/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                    <div class="space-y-3 pointer-events-none relative z-10">
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-accentTeal/10 flex items-center justify-center text-accentTeal text-3xl">
+                            <i class="fa-solid fa-file-audio"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-200 font-bold text-base">Load Audio File for Trimming</h3>
+                            <p class="text-xs text-gray-400 mt-1">Supports MP3, WAV, AAC, OGG, FLAC (Decoded client-side)</p>
+                        </div>
+                        <span class="inline-block text-xs bg-white/5 px-4 py-1.5 rounded-full border border-white/10 text-gray-300 font-semibold">Browse Sound Tracks</span>
                     </div>
                 </div>
-                <!-- Interactive Waveform Sandbox -->
-                <div class="p-6 bg-black/40 rounded-2xl border border-white/5 space-y-4">
-                    <span class="text-xs font-bold text-accentPurple uppercase tracking-wider block">Interactive Waveform Shaver</span>
-                    <div class="h-24 bg-black/60 rounded-xl border border-white/5 flex items-end justify-between p-2 gap-0.5 relative overflow-hidden">
-                        <div class="absolute inset-y-0 left-12 w-0.5 bg-red-500 z-10 animate-pulse"></div>
-                        <div class="absolute inset-y-0 right-24 w-0.5 bg-red-500 z-10 animate-pulse"></div>
-                        <div class="absolute inset-y-0 left-0 right-0 bg-accentPurple/5"></div>
-                        <!-- Wave bars -->
-                        <div class="w-1 h-12 bg-white/10 rounded"></div><div class="w-1 h-16 bg-white/10 rounded"></div><div class="w-1 h-8 bg-white/20 rounded"></div>
-                        <div class="w-1 h-14 bg-accentTeal rounded"></div><div class="w-1 h-20 bg-accentTeal rounded"></div><div class="w-1 h-12 bg-accentTeal rounded"></div>
-                        <div class="w-1 h-18 bg-accentTeal rounded"></div><div class="w-1 h-10 bg-accentTeal rounded"></div><div class="w-1 h-16 bg-accentTeal rounded"></div>
-                        <div class="w-1 h-22 bg-accentTeal rounded"></div><div class="w-1 h-14 bg-accentTeal rounded"></div><div class="w-1 h-8 bg-accentTeal rounded"></div>
-                        <div class="w-1 h-16 bg-white/10 rounded"></div><div class="w-1 h-10 bg-white/10 rounded"></div><div class="w-1 h-12 bg-white/10 rounded"></div>
+
+                <!-- Active Trimmer Workspace Container -->
+                <div id="trimmer-workspace" class="hidden space-y-6">
+                    
+                    <!-- File Header Controls -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-black/40 border border-white/10">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <button id="trimmer-play-btn" class="w-12 h-12 rounded-full bg-accentTeal text-darkBg font-bold flex items-center justify-center flex-shrink-0 hover:scale-105 transition-transform shadow-lg shadow-accentTeal/30">
+                                <i id="trimmer-play-icon" class="fa-solid fa-play ml-1 text-base"></i>
+                            </button>
+                            <div class="min-w-0">
+                                <h4 id="trimmer-file-name" class="text-sm font-bold text-white truncate max-w-xs md:max-w-md">audio_track.mp3</h4>
+                                <div class="flex items-center gap-3 text-xs text-gray-400 font-mono mt-0.5">
+                                    <span id="trimmer-file-size">0.0 MB</span>
+                                    <span>•</span>
+                                    <span id="trimmer-total-duration" class="text-accentTeal">0:00.0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="trimmer-change-btn" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 transition-colors flex items-center gap-2">
+                            <i class="fa-solid fa-folder-open"></i> Swap Track
+                        </button>
                     </div>
-                    <div class="flex justify-between items-center text-xs text-gray-400">
-                        <span>Clipping Boundaries: <strong class="text-accentTeal font-mono">0:12.4s - 0:48.1s</strong></span>
-                        <span class="bg-accentTeal/15 text-accentTeal font-bold px-2 py-0.5 rounded">Active Range</span>
+
+                    <!-- Beat-Synced Interactive Spectrum Canvas -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span class="font-bold uppercase tracking-wider text-[11px] text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-simple text-accentTeal"></i> Spectral Waveform Range
+                            </span>
+                            <div class="flex items-center gap-4 font-mono text-[11px]">
+                                <span>Window: <strong id="trimmer-window-duration" class="text-accentTeal font-bold">0.0s</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Waveform Container with Highlight Overlay -->
+                        <div class="relative h-32 bg-black/80 rounded-2xl border border-white/10 overflow-hidden flex items-end justify-between p-2 gap-1" id="trimmer-waveform-box">
+                            <!-- Glowing Selection Backdrop Overlay -->
+                            <div id="trimmer-selection-overlay" class="absolute top-0 bottom-0 bg-accentTeal/15 border-x-2 border-accentTeal pointer-events-none transition-all duration-75 z-10 shadow-[0_0_20px_rgba(0,245,212,0.25)]"></div>
+                            
+                            <div id="trimmer-bars-container" class="w-full h-full flex items-end justify-between gap-1 relative z-20">
+                                <!-- Waveform bars populated dynamically -->
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="p-4 rounded-xl bg-accentTeal/5 border border-accentTeal/15 text-center text-xs text-accentTeal flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-info"></i> Audio Trimming functionality is currently integrated in Step 2 of the main Workspace.
+
+                    <!-- Scrubber Controls -->
+                    <div class="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-white/5">
+                        <span id="trimmer-current-time" class="text-xs font-mono text-accentTeal font-bold w-12 text-right">0:00</span>
+                        <input id="trimmer-scrub-slider" type="range" min="0" max="100" value="0" step="0.1" class="premium-slider flex-grow">
+                        <span id="trimmer-window-end-time" class="text-xs font-mono text-gray-400 w-12">0:00</span>
+                    </div>
+
+                    <!-- Precision Trim Sliders & Quick Presets -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 rounded-2xl bg-black/30 border border-white/5">
+                        <!-- Start Trim Controls -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-300">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-scissors text-accentTeal"></i> Trim Start Boundary</span>
+                                <span id="trimmer-start-display" class="text-accentTeal font-mono text-sm font-bold">0.0s</span>
+                            </div>
+                            <input id="trimmer-start-slider" type="range" min="0" max="100" value="0" step="0.1" class="premium-slider">
+                        </div>
+
+                        <!-- End Trim Controls -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-300">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-scissors text-accentPurple"></i> Trim End Boundary</span>
+                                <span id="trimmer-end-display" class="text-accentPurple font-mono text-sm font-bold">0.0s</span>
+                            </div>
+                            <input id="trimmer-end-slider" type="range" min="0" max="100" value="100" step="0.1" class="premium-slider">
+                        </div>
+
+                        <!-- Preset Action Buttons -->
+                        <div class="md:col-span-2 flex flex-wrap items-center gap-2 pt-2 border-t border-white/5">
+                            <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mr-2">Quick Presets:</span>
+                            <button type="button" id="preset-first-15" class="preset-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 transition-colors">First 15s</button>
+                            <button type="button" id="preset-first-30" class="preset-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 transition-colors">First 30s</button>
+                            <button type="button" id="preset-last-30" class="preset-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 transition-colors">Last 30s</button>
+                            <button type="button" id="preset-reset" class="preset-btn px-2.5 py-1 rounded-lg bg-accentTeal/20 border border-accentTeal/60 text-xs font-bold text-accentTeal shadow-sm shadow-accentTeal/20 transition-colors">Reset Trim Window</button>
+                        </div>
+                    </div>
+
+                    <!-- Export Configuration Matrix -->
+                    <div class="p-6 rounded-2xl bg-black/50 border border-white/10 space-y-6">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-file-export text-accentTeal"></i> Modern Audio Export Configurations
+                            </h3>
+                            <span class="text-xs text-gray-400">Client-Side Audio Context Renderer</span>
+                        </div>
+
+                        <!-- Format Cards Grid -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <!-- WAV Card -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="export-format" value="wav" checked class="sr-only peer">
+                                <div class="p-3.5 rounded-xl border border-white/10 bg-white/5 peer-checked:border-accentTeal peer-checked:bg-accentTeal/10 peer-checked:text-white text-gray-400 transition-all text-center space-y-1">
+                                    <div class="text-sm font-bold">WAV</div>
+                                    <div class="text-[10px] text-gray-400">Lossless PCM</div>
+                                </div>
+                            </label>
+
+                            <!-- MP3 Card -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="export-format" value="mp3" class="sr-only peer">
+                                <div class="p-3.5 rounded-xl border border-white/10 bg-white/5 peer-checked:border-accentTeal peer-checked:bg-accentTeal/10 peer-checked:text-white text-gray-400 transition-all text-center space-y-1">
+                                    <div class="text-sm font-bold">MP3</div>
+                                    <div class="text-[10px] text-gray-400">320kbps High</div>
+                                </div>
+                            </label>
+
+                            <!-- WebM Card -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="export-format" value="webm" class="sr-only peer">
+                                <div class="p-3.5 rounded-xl border border-white/10 bg-white/5 peer-checked:border-accentTeal peer-checked:bg-accentTeal/10 peer-checked:text-white text-gray-400 transition-all text-center space-y-1">
+                                    <div class="text-sm font-bold">WebM</div>
+                                    <div class="text-[10px] text-gray-400">Opus Codec</div>
+                                </div>
+                            </label>
+
+                            <!-- OGG Card -->
+                            <label class="cursor-pointer">
+                                <input type="radio" name="export-format" value="ogg" class="sr-only peer">
+                                <div class="p-3.5 rounded-xl border border-white/10 bg-white/5 peer-checked:border-accentTeal peer-checked:bg-accentTeal/10 peer-checked:text-white text-gray-400 transition-all text-center space-y-1">
+                                    <div class="text-sm font-bold">OGG</div>
+                                    <div class="text-[10px] text-gray-400">Vorbis Audio</div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Sample Rate Selector -->
+                        <div class="flex items-center justify-between text-xs pt-2">
+                            <span class="font-semibold text-gray-300 uppercase tracking-wider text-[11px]">Output Sample Rate</span>
+                            <div class="flex items-center gap-2">
+                                <button type="button" id="samplerate-44" class="px-3 py-1.5 rounded-lg bg-accentTeal/20 border border-accentTeal/60 text-accentTeal font-bold">44.1 kHz</button>
+                                <button type="button" id="samplerate-48" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 font-semibold hover:text-white">48.0 kHz</button>
+                            </div>
+                        </div>
+
+                        <!-- Export Action Button -->
+                        <button id="btn-export-audio" class="glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-base shadow-lg shadow-accentTeal/20 hover:shadow-accentTeal/35 flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-download"></i> Process & Export Trimmed Audio
+                        </button>
+
+                        <!-- Trimmer Render Progress Bar -->
+                        <div id="trimmer-render-window" class="hidden p-5 rounded-2xl border border-accentTeal/20 bg-black/60 text-center space-y-4">
+                            <div class="relative w-12 h-12 mx-auto">
+                                <div class="absolute inset-0 spin-cw border-2 border-t-accentTeal border-r-transparent border-b-transparent border-l-transparent rounded-full"></div>
+                                <div class="absolute inset-2 spin-ccw border-2 border-b-accentPurple border-t-transparent border-r-transparent border-l-transparent rounded-full"></div>
+                            </div>
+                            <div class="space-y-1">
+                                <h4 id="trimmer-render-status" class="text-sm font-semibold text-gray-200">Encoding Audio Buffer...</h4>
+                                <p class="text-xs text-gray-400">Executing client-side PCM rendering pipeline...</p>
+                            </div>
+
+                            <button id="btn-cancel-trimmer-render" class="w-full py-2 px-4 rounded-xl border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 text-red-200 text-xs font-semibold transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-stop"></i> Cancel Rendering
+                            </button>
+                        </div>
+
+                        <!-- Trimmer Export Completed Box -->
+                        <div id="trimmer-completed-window" class="hidden p-5 rounded-2xl border border-accentTeal/20 bg-accentTeal/[0.04] text-center space-y-4">
+                            <div class="w-12 h-12 rounded-full bg-accentTeal/10 border border-accentTeal/30 flex items-center justify-center text-accentTeal mx-auto text-lg">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Audio Trim Rendered Successfully</h4>
+                                <p class="text-xs text-gray-400 mt-1">Preview your exported file below</p>
+                            </div>
+
+                            <audio id="trimmer-export-player" controls class="w-full mt-2"></audio>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                                <button id="btn-download-trimmed" class="glow-button w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-xs shadow-lg shadow-accentTeal/20 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> Save File
+                                </button>
+                                <button id="btn-trimmer-reset" class="w-full py-3.5 px-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-scissors"></i> Trim Another Section
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
+        <!-- Additional Sandbox Views -->
         <div id="view-audmerger" class="hidden max-w-4xl mx-auto">
             <div class="glass-panel p-8 rounded-3xl space-y-6">
                 <div class="flex items-center gap-3 border-b border-white/10 pb-4">
@@ -609,13 +796,6 @@
                         </div>
                         <input type="checkbox" checked class="w-4 h-4 accent-accentTeal">
                     </div>
-                    <div class="p-4 bg-black/40 border border-white/5 rounded-xl flex justify-between items-center">
-                        <div>
-                            <span class="text-xs font-bold text-gray-200 uppercase tracking-wider block">Spectral Noise Gate</span>
-                            <p class="text-[10px] text-gray-500">Cut-off decibels under custom room ambient baselines.</p>
-                        </div>
-                        <input type="range" class="w-24 bg-white/20 h-1.5 rounded" min="0" max="100" value="80">
-                    </div>
                 </div>
             </div>
         </div>
@@ -631,16 +811,6 @@
                         <p class="text-xs text-gray-400">Bicubic visual upscale and contrast-limited adaptive histogram equalizer engine.</p>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="p-5 bg-white/5 border border-white/15 rounded-2xl relative overflow-hidden">
-                        <span class="absolute top-2 left-2 text-[10px] bg-red-500 text-white font-bold px-1.5 py-0.5 rounded">Before</span>
-                        <div class="aspect-video bg-black/40 rounded border border-white/5 flex items-center justify-center text-[10px] text-gray-500">[Low-Res Sample Frame]</div>
-                    </div>
-                    <div class="p-5 bg-accentTeal/5 border border-accentTeal/15 rounded-2xl relative overflow-hidden">
-                        <span class="absolute top-2 left-2 text-[10px] bg-accentTeal text-darkBg font-bold px-1.5 py-0.5 rounded">Enhanced</span>
-                        <div class="aspect-video bg-black/40 rounded border border-white/5 flex items-center justify-center text-[10px] text-accentTeal">[4K Upscaled Crystal Frame]</div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -651,19 +821,28 @@
         <p>&copy; 2026 CineMerge Studio Inc. All assets rendered in secure local DOM spaces.</p>
     </footer>
 
-    <!-- Hidden native element canvas workspace for real-time multiplex compositing -->
-    <canvas id="hidden-engine-canvas" class="hidden"></canvas>
-
     <!-- Three.js Library CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <!-- App Code Engine Execution -->
     <script>
-        // Set dynamic application identifiers
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cinemerge-studio';
+        // Global Toast Notification System
+        function displayToast(msg) {
+            const toastElement = document.createElement('div');
+            toastElement.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#161a29]/95 border border-accentTeal/30 text-white px-5 py-3 rounded-2xl text-sm font-semibold shadow-2xl backdrop-blur-md transition-all duration-300 flex items-center gap-2';
+            toastElement.innerHTML = `<i class="fa-solid fa-circle-check text-accentTeal"></i> ${msg}`;
+            document.body.appendChild(toastElement);
+            setTimeout(() => {
+                toastElement.style.opacity = '0';
+                setTimeout(() => {
+                    if (toastElement.parentNode) {
+                        toastElement.parentNode.removeChild(toastElement);
+                    }
+                }, 400);
+            }, 3500);
+        }
 
         /* ==========================================================
-           1. THREE.JS PARTICLE SPACE GRID ENGINE
+           1. THREE.JS PARTICLE SPACE BACKGROUND
            ========================================================== */
         const canvasContainer = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
@@ -745,7 +924,7 @@
         });
 
         /* ==========================================================
-           2. NAVIGATION BAR CONTROL OVERHAUL & DELEGATION
+           2. NAVIGATION TAB SWITCHER
            ========================================================== */
         const navWorkspace = document.getElementById('nav-workspace');
         const navTrimmer = document.getElementById('nav-trimmer');
@@ -766,35 +945,35 @@
 
         function selectToolTab(activeButton, activeView) {
             navElements.forEach(btn => {
-                btn.className = "px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white";
+                if (btn) btn.className = "px-3.5 py-2 rounded-lg text-xs font-semibold tracking-wide flex items-center gap-1.5 transition-all text-gray-400 hover:text-white";
             });
-            viewsList.forEach(view => view.classList.add('hidden'));
+            viewsList.forEach(view => {
+                if (view) view.classList.add('hidden');
+            });
 
-            activeButton.className = "px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all text-accentTeal bg-white/5 border border-white/10";
-            activeView.classList.remove('hidden');
+            if (activeButton) activeButton.className = "px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide flex items-center gap-1.5 transition-all text-accentTeal bg-white/5 border border-white/10";
+            if (activeView) activeView.classList.remove('hidden');
         }
 
-        navWorkspace.addEventListener('click', () => selectToolTab(navWorkspace, viewStudio));
-        navTrimmer.addEventListener('click', () => selectToolTab(navTrimmer, viewTrimmer));
-        navAudMerger.addEventListener('click', () => selectToolTab(navAudMerger, viewAudMerger));
-        navVidMerger.addEventListener('click', () => selectToolTab(navVidMerger, viewVidMerger));
-        navAudEnhancer.addEventListener('click', () => selectToolTab(navAudEnhancer, viewAudEnhancer));
-        navVidEnhancer.addEventListener('click', () => selectToolTab(navVidEnhancer, viewVidEnhancer));
-
+        if (navWorkspace) navWorkspace.addEventListener('click', () => selectToolTab(navWorkspace, viewStudio));
+        if (navTrimmer) navTrimmer.addEventListener('click', () => selectToolTab(navTrimmer, viewTrimmer));
+        if (navAudMerger) navAudMerger.addEventListener('click', () => selectToolTab(navAudMerger, viewAudMerger));
+        if (navVidMerger) navVidMerger.addEventListener('click', () => selectToolTab(navVidMerger, viewVidMerger));
+        if (navAudEnhancer) navAudEnhancer.addEventListener('click', () => selectToolTab(navAudEnhancer, viewAudEnhancer));
+        if (navVidEnhancer) navVidEnhancer.addEventListener('click', () => selectToolTab(navVidEnhancer, viewVidEnhancer));
 
         /* ==========================================================
-           3. STREAM PIPELINES & USER INTERFACE MATRIX
+           3. AUDIOOVERLAY PRO WORKSPACE STATE & HANDLERS
            ========================================================== */
         let stateVideo = null;
         let stateAudio = null;
         let originalVideoName = '';
-        let hasCompletedMerge = false; // State track for contextual re-processing after swap
+        let hasCompletedMerge = false;
 
         let currentVideoObjectURL = '';
         let currentAudioObjectURL = '';
         let currentMergedObjectURL = '';
 
-        // Media Input Node Elements
         const videoInput = document.getElementById('video-input');
         const audioInput = document.getElementById('audio-input');
         const videoDropzone = document.getElementById('video-dropzone');
@@ -807,7 +986,6 @@
         const changeVideoBtn = document.getElementById('change-video-btn');
         const changeAudioBtn = document.getElementById('change-audio-btn');
 
-        // Audio Preview Player Controller Elements
         const audioPreviewPlayer = document.getElementById('audio-preview-player');
         const audioPreviewPlayBtn = document.getElementById('audio-preview-play-btn');
         const audioPlayIcon = document.getElementById('audio-play-icon');
@@ -816,7 +994,6 @@
         const audioScrubSlider = document.getElementById('audio-scrub-slider');
         const waveformStatusIndicator = document.getElementById('waveform-status-indicator');
 
-        // Audio Manual Custom Trimming Slider Variables
         const toggleTrimBtn = document.getElementById('toggle-trim-btn');
         const trimArrow = document.getElementById('trim-arrow');
         const trimControlsDrawer = document.getElementById('trim-controls-drawer');
@@ -825,20 +1002,20 @@
         const trimStartDisplay = document.getElementById('trim-start-display');
         const trimEndDisplay = document.getElementById('trim-end-display');
 
-        // Mixer Elements
         const volSlider = document.getElementById('vol-slider');
         const volNumber = document.getElementById('vol-number');
-        const mixModeSelect = document.getElementById('mix-mode');
+        const mixModeInput = document.getElementById('mix-mode');
+        const mixOptionReplace = document.getElementById('mix-option-replace');
+        const mixOptionMix = document.getElementById('mix-option-mix');
+        const mixModeDescription = document.getElementById('mix-mode-description');
         const btnMerge = document.getElementById('btn-merge');
         const loopAudioToggle = document.getElementById('loop-audio-toggle');
         const autoLoopBadge = document.getElementById('auto-loop-badge');
 
-        // Badges Elements
         const videoBadge = document.getElementById('video-badge');
         const audioBadge = document.getElementById('audio-badge');
         const audioTrimBadge = document.getElementById('audio-trim-badge');
 
-        // Status Framework Elements
         const processWindow = document.getElementById('process-window');
         const btnCancelMerge = document.getElementById('btn-cancel-merge');
         const completedWindow = document.getElementById('completed-window');
@@ -847,55 +1024,101 @@
         const btnDownload = document.getElementById('btn-download');
         const btnReupload = document.getElementById('btn-reupload');
 
-        // Setup File Drop Event Listeners
+        // Segmented Mix Option Toggle logic
+        if (mixOptionReplace && mixOptionMix && mixModeInput) {
+            mixOptionReplace.onclick = () => {
+                mixModeInput.value = 'replace';
+                mixOptionReplace.className = "py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all bg-accentPurple/20 border border-accentPurple/50 text-white shadow-lg shadow-accentPurple/15";
+                mixOptionMix.className = "py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all bg-transparent border border-transparent text-gray-400 hover:text-white";
+                if (mixModeDescription) {
+                    mixModeDescription.innerText = "Suppresses original video soundtrack and completely replaces it with your custom audio overlay.";
+                }
+                triggerReProcessState();
+            };
+
+            mixOptionMix.onclick = () => {
+                mixModeInput.value = 'mix';
+                mixOptionMix.className = "py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all bg-accentTeal/20 border border-accentTeal/50 text-white shadow-lg shadow-accentTeal/15";
+                mixOptionReplace.className = "py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all bg-transparent border border-transparent text-gray-400 hover:text-white";
+                if (mixModeDescription) {
+                    mixModeDescription.innerText = "Combines both your custom audio track and the original video soundtrack together into a merged mix.";
+                }
+                triggerReProcessState();
+            };
+        }
+
+        // Dropzone listeners
         ['dragenter', 'dragover'].forEach(name => {
-            videoDropzone.addEventListener(name, (e) => { e.preventDefault(); videoDropzone.classList.add('dragover'); }, false);
-            audioDropzone.addEventListener(name, (e) => { e.preventDefault(); audioDropzone.classList.add('dragover'); }, false);
+            if (videoDropzone) videoDropzone.addEventListener(name, (e) => { e.preventDefault(); videoDropzone.classList.add('dragover'); }, false);
+            if (audioDropzone) audioDropzone.addEventListener(name, (e) => { e.preventDefault(); audioDropzone.classList.add('dragover'); }, false);
         });
 
         ['dragleave', 'drop'].forEach(name => {
-            videoDropzone.addEventListener(name, (e) => { e.preventDefault(); videoDropzone.classList.remove('dragover'); }, false);
-            audioDropzone.addEventListener(name, (e) => { e.preventDefault(); audioDropzone.classList.remove('dragover'); }, false);
+            if (videoDropzone) videoDropzone.addEventListener(name, (e) => { e.preventDefault(); videoDropzone.classList.remove('dragover'); }, false);
+            if (audioDropzone) audioDropzone.addEventListener(name, (e) => { e.preventDefault(); audioDropzone.classList.remove('dragover'); }, false);
         });
 
-        videoDropzone.addEventListener('drop', (e) => {
-            const files = e.dataTransfer.files;
-            if (files.length) handleVideoImport(files[0]);
-        });
+        if (videoDropzone) {
+            videoDropzone.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                if (files.length) handleVideoImport(files[0]);
+            });
+        }
 
-        audioDropzone.addEventListener('drop', (e) => {
-            const files = e.dataTransfer.files;
-            if (files.length) handleAudioImport(files[0]);
-        });
+        if (audioDropzone) {
+            audioDropzone.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                if (files.length) {
+                    if (!stateVideo) {
+                        displayToast("Please select a video first.");
+                        return;
+                    }
+                    handleAudioImport(files[0]);
+                }
+            });
+        }
 
-        videoInput.addEventListener('change', (e) => {
-            if (e.target.files.length) handleVideoImport(e.target.files[0]);
-        });
+        if (videoInput) videoInput.addEventListener('change', (e) => { if (e.target.files.length) handleVideoImport(e.target.files[0]); });
 
-        audioInput.addEventListener('change', (e) => {
-            if (e.target.files.length) handleAudioImport(e.target.files[0]);
-        });
+        // Selection Guard on Audio Upload
+        if (audioInput) {
+            audioInput.addEventListener('click', (e) => {
+                if (!stateVideo) {
+                    e.preventDefault();
+                    displayToast("Please select a video first.");
+                }
+            });
 
-        // Toggle Manual Trim Settings Drawer Accordion
-        toggleTrimBtn.addEventListener('click', () => {
-            const isHidden = trimControlsDrawer.classList.contains('hidden');
-            if (isHidden) {
-                trimControlsDrawer.classList.remove('hidden');
-                trimArrow.style.transform = 'rotate(180deg)';
-            } else {
-                trimControlsDrawer.classList.add('hidden');
-                trimArrow.style.transform = 'rotate(0deg)';
-            }
-        });
+            audioInput.addEventListener('change', (e) => {
+                if (!stateVideo) {
+                    e.preventDefault();
+                    audioInput.value = '';
+                    displayToast("Please select a video first.");
+                    return;
+                }
+                if (e.target.files.length) handleAudioImport(e.target.files[0]);
+            });
+        }
 
-        // 2.1 Handling Video Sub-Engine Configuration with Auto-Audio Clear
+        if (toggleTrimBtn) {
+            toggleTrimBtn.addEventListener('click', () => {
+                const isHidden = trimControlsDrawer.classList.contains('hidden');
+                if (isHidden) {
+                    trimControlsDrawer.classList.remove('hidden');
+                    if (trimArrow) trimArrow.style.transform = 'rotate(180deg)';
+                } else {
+                    trimControlsDrawer.classList.add('hidden');
+                    if (trimArrow) trimArrow.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+
         function handleVideoImport(file) {
             if (!file.type.startsWith('video/')) {
                 displayToast('Invalid media type. Please select an MP4 or WebM video format.');
                 return;
             }
 
-            // AUTO-CLEAR EXISITING AUDIO LAYER ON VIDEO SWAP
             if (stateAudio) {
                 clearAudioTrack();
                 displayToast('Video swapped. Audio layer cleared to prevent sync mismatches.');
@@ -913,11 +1136,9 @@
             if (videoMetadata && videoFileNameEl && videoFileSizeEl) {
                 videoMetadata.classList.remove('hidden');
                 videoFileNameEl.innerText = file.name;
-                const fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-                videoFileSizeEl.innerText = `${fileSizeInMB} MB`;
+                videoFileSizeEl.innerText = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
             }
 
-            // Video loaded status symbol update
             videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-medium flex items-center gap-1.5";
             videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Video Synced';
 
@@ -926,16 +1147,20 @@
             videoPlayer.src = currentVideoObjectURL;
             videoPlayer.load();
 
-            // Synced Volume logic
             updatePreviewVolume();
             verifyIntegrationReadiness();
             triggerReProcessState();
         }
 
-        // 2.2 Audio file imports and trigger loop parameters
         function handleAudioImport(file) {
+            if (!stateVideo) {
+                displayToast("Please select a video first.");
+                if (audioInput) audioInput.value = '';
+                return;
+            }
+
             if (!file.type.startsWith('audio/') && !file.name.endsWith('.mp3')) {
-                displayToast('Invalid configuration. Please load a valid audio track sequence.');
+                displayToast('Invalid audio configuration. Please load a valid soundtrack.');
                 return;
             }
             stateAudio = file;
@@ -948,11 +1173,9 @@
             if (currentAudioObjectURL) URL.revokeObjectURL(currentAudioObjectURL);
             currentAudioObjectURL = URL.createObjectURL(file);
             
-            // Assign preview player source directly
             audioPreviewPlayer.src = currentAudioObjectURL;
             audioPreviewPlayer.load();
 
-            // Set default button layout
             audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
             audioScrubSlider.value = 0;
 
@@ -961,11 +1184,9 @@
             triggerReProcessState();
         }
 
-        // 2.3 Audio Preview Control Pipeline & dynamic trim checking
         audioPreviewPlayer.onloadedmetadata = () => {
-            applyAudioTrimmingCalculations(true); // reset custom slider boundaries to full track scope on fresh load
+            applyAudioTrimmingCalculations(true);
             
-            // METADATA DRIVEN AUDIO LOOP AUTOMATION
             if (stateVideo && videoPlayer.duration && audioPreviewPlayer.duration) {
                 if (videoPlayer.duration > audioPreviewPlayer.duration) {
                     loopAudioToggle.checked = true;
@@ -984,12 +1205,10 @@
             const originalDuration = audioPreviewPlayer.duration;
             let videoBoundDuration = originalDuration;
 
-            // Constrain trim limits visually by Video length if video is attached
             if (stateVideo && videoPlayer.duration) {
                 videoBoundDuration = Math.min(originalDuration, videoPlayer.duration);
             }
 
-            // Set up ranges for custom slider inputs
             trimStartSlider.max = originalDuration.toFixed(1);
             trimEndSlider.max = originalDuration.toFixed(1);
 
@@ -998,21 +1217,17 @@
                 trimEndSlider.value = videoBoundDuration.toFixed(1);
             }
 
-            // Real-time Slider Constraints values extraction
             const trimStartVal = parseFloat(trimStartSlider.value);
             const trimEndVal = parseFloat(trimEndSlider.value);
 
             trimStartDisplay.innerText = `${trimStartVal.toFixed(1)}s`;
             trimEndDisplay.innerText = `${trimEndVal.toFixed(1)}s`;
 
-            // Active display length calculation
             const allowedDuration = trimEndVal - trimStartVal;
 
-            // Audio loaded status symbol update
             audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-medium flex items-center gap-1.5";
             audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span> Audio Synced';
 
-            // Active Custom Trim notification symbol
             if (trimStartVal > 0 || trimEndVal < originalDuration) {
                 audioTrimBadge.classList.remove('hidden');
             } else {
@@ -1025,7 +1240,6 @@
             formulateVisualSignature(trimStartVal, trimEndVal, originalDuration);
         }
 
-        // Constraints loop: Trim Start must be less than Trim End
         trimStartSlider.addEventListener('input', () => {
             let startVal = parseFloat(trimStartSlider.value);
             const endVal = parseFloat(trimEndSlider.value);
@@ -1033,7 +1247,7 @@
                 startVal = Math.max(0, endVal - 0.5);
                 trimStartSlider.value = startVal;
             }
-            audioPreviewPlayer.currentTime = startVal; // Seek target for instant auditory feedback
+            audioPreviewPlayer.currentTime = startVal;
             applyAudioTrimmingCalculations();
             triggerReProcessState();
         });
@@ -1045,7 +1259,7 @@
                 endVal = Math.min(audioPreviewPlayer.duration, startVal + 0.5);
                 trimEndSlider.value = endVal;
             }
-            audioPreviewPlayer.currentTime = endVal; // Seek target for instant auditory feedback
+            audioPreviewPlayer.currentTime = endVal;
             applyAudioTrimmingCalculations();
             triggerReProcessState();
         });
@@ -1054,7 +1268,6 @@
             const trimStartVal = parseFloat(trimStartSlider.value);
             const trimEndVal = parseFloat(trimEndSlider.value);
 
-            // Loop / Restart play cursor if boundaries exceeded
             if (audioPreviewPlayer.currentTime < trimStartVal) {
                 audioPreviewPlayer.currentTime = trimStartVal;
             }
@@ -1066,7 +1279,6 @@
             }
 
             if (!audioScrubSlider.matches(':active')) {
-                // Calculate display progress relative to the trim window
                 const elapsedTrimTime = Math.max(0, audioPreviewPlayer.currentTime - trimStartVal);
                 audioScrubSlider.value = Math.floor(elapsedTrimTime);
             }
@@ -1082,7 +1294,6 @@
 
         audioPreviewPlayBtn.onclick = () => {
             if (audioPreviewPlayer.paused) {
-                // Play within custom trim boundaries
                 const trimStartVal = parseFloat(trimStartSlider.value);
                 if (audioPreviewPlayer.currentTime < trimStartVal || audioPreviewPlayer.currentTime >= parseFloat(trimEndSlider.value)) {
                     audioPreviewPlayer.currentTime = trimStartVal;
@@ -1104,7 +1315,6 @@
             audioCurrentTime.innerText = "0:00";
         };
 
-        // Utility time conversion function
         function formatTime(secs) {
             if (isNaN(secs)) return "0:00";
             const minutes = Math.floor(secs / 60);
@@ -1112,7 +1322,6 @@
             return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
 
-        // Shared Modular Audio Session Clear Helper
         function clearAudioTrack() {
             stateAudio = null;
             audioPreviewPlayer.pause();
@@ -1121,17 +1330,15 @@
             audioPreviewFrame.classList.add('hidden');
             audioDropzone.classList.remove('hidden');
 
-            // Reset audio badges status
             audioBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
             audioBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track';
             audioTrimBadge.classList.add('hidden');
 
-            audioInput.value = '';
+            if (audioInput) audioInput.value = '';
             autoLoopBadge.classList.add('hidden');
             verifyIntegrationReadiness();
         }
 
-        // Reset Actions / Swapping Assets
         changeVideoBtn.addEventListener('click', () => {
             stateVideo = null;
             videoPlayer.pause();
@@ -1139,23 +1346,18 @@
             videoPlayer.load();
             videoPreviewFrame.classList.add('hidden');
             
-            // Clean up metadata display
             const videoMetadata = document.getElementById('video-metadata');
-            if (videoMetadata) {
-                videoMetadata.classList.add('hidden');
-            }
+            if (videoMetadata) videoMetadata.classList.add('hidden');
 
             videoDropzone.classList.remove('hidden');
 
-            // Reset video badge status
             videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
             videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Video File';
 
-            videoInput.value = '';
+            if (videoInput) videoInput.value = '';
             autoLoopBadge.classList.add('hidden');
             verifyIntegrationReadiness();
 
-            // Recheck Audio limits as video constraint is removed
             if (stateAudio) {
                 applyAudioTrimmingCalculations();
             }
@@ -1165,7 +1367,6 @@
             clearAudioTrack();
         });
 
-        // Bi-directional Output Gain Controls (Slider & Number Input link)
         volSlider.addEventListener('input', (e) => {
             volNumber.value = e.target.value;
             updatePreviewVolume();
@@ -1174,12 +1375,9 @@
 
         volNumber.addEventListener('input', (e) => {
             let inputVal = parseInt(e.target.value);
-            if (isNaN(inputVal)) return; // Allow user to type/delete
-            
-            // Constrain between 0% and 200% limits
+            if (isNaN(inputVal)) return;
             if (inputVal < 0) inputVal = 0;
             if (inputVal > 200) inputVal = 200;
-            
             volNumber.value = inputVal;
             volSlider.value = inputVal;
             updatePreviewVolume();
@@ -1187,18 +1385,12 @@
         });
 
         volNumber.addEventListener('blur', () => {
-            // Fill empty values upon losing input focus
             if (volNumber.value === "") {
                 volNumber.value = "100";
                 volSlider.value = "100";
                 updatePreviewVolume();
                 triggerReProcessState();
             }
-        });
-
-        // Re-process triggers for configuration options
-        mixModeSelect.addEventListener('change', () => {
-            triggerReProcessState();
         });
 
         loopAudioToggle.addEventListener('change', () => {
@@ -1208,12 +1400,8 @@
         function updatePreviewVolume() {
             const currentGain = parseFloat(volSlider.value) / 100;
             const previewVolClamped = Math.min(1.0, currentGain);
-            if (audioPreviewPlayer) {
-                audioPreviewPlayer.volume = previewVolClamped;
-            }
-            if (videoPlayer) {
-                videoPlayer.volume = previewVolClamped;
-            }
+            if (audioPreviewPlayer) audioPreviewPlayer.volume = previewVolClamped;
+            if (videoPlayer) videoPlayer.volume = previewVolClamped;
         }
 
         function verifyIntegrationReadiness() {
@@ -1224,25 +1412,15 @@
             }
         }
 
-        // Contextual Action Button Shift: Teal-Themed "Re-Process & Merge"
         function triggerReProcessState() {
             if (!hasCompletedMerge) return;
-            
-            // Hide completed preview so the user focuses on re-processing
             completedWindow.classList.add('hidden');
-            
-            // Show the merge button again
             btnMerge.style.display = 'flex';
             btnMerge.removeAttribute('disabled');
-            
-            // Update button text and style to Teal theme
             btnMerge.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin"></i> Re-Process & Merge`;
-            
-            // Remove purple classes, add teal classes
             btnMerge.className = "glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentTeal to-[#00bbf9] text-darkBg font-bold text-base shadow-lg shadow-accentTeal/20 hover:shadow-accentTeal/35 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0";
         }
 
-        // Highlight and formulate waveform with active/trimmed visual sections
         function formulateVisualSignature(trimStart, trimEnd, originalDuration) {
             const barContainer = document.getElementById('waveform-container');
             if (!barContainer) return;
@@ -1258,42 +1436,16 @@
                 const initialHeight = Math.floor(Math.random() * 32) + 8;
                 bar.style.height = `${initialHeight}px`;
 
-                // Dim/Gray out bars outside the custom trimmed boundaries
                 if (i < startIndex || i >= endIndex) {
                     bar.style.opacity = "0.12";
                 }
 
                 barContainer.appendChild(bar);
             }
-
-            const signalJitterTimer = setInterval(() => {
-                if (!stateAudio) {
-                    clearInterval(signalJitterTimer);
-                    return;
-                }
-                const activeBars = barContainer.children;
-                const isPlaying = !audioPreviewPlayer.paused;
-                for (let i = 0; i < activeBars.length; i++) {
-                    if (!activeBars[i]) continue;
-                    let dynamicOffset = Math.sin((i / 5) + Date.now() / 200) * 8 + 15;
-                    let multiplier = isPlaying ? 1.5 : 0.3;
-                    const jitterHeight = Math.max(4, Math.floor(dynamicOffset + (Math.random() * 12 * multiplier)));
-                    activeBars[i].style.height = `${jitterHeight}px`;
-                    
-                    // Only animate full brightness for bars within permitted boundaries
-                    if (i >= startIndex && i < endIndex) {
-                        if (isPlaying && Math.random() > 0.4) {
-                            activeBars[i].classList.add('active');
-                        } else {
-                            activeBars[i].classList.remove('active');
-                        }
-                    }
-                }
-            }, 100);
         }
 
         /* ==========================================================
-           4. CLIENT-SIDE WEB AUDIO & DIRECT STREAM CAPTURE PIPELINE
+           4. WORKSPACE DIRECT STREAM MULTIPLEX ENGINE
            ========================================================== */
         let audioCtx;
         let compositionVideoNode;
@@ -1305,7 +1457,6 @@
         btnMerge.addEventListener('click', async () => {
             if (!stateVideo || !stateAudio) return;
 
-            // Pause preview players to prevent audio overlaps during merge
             videoPlayer.pause();
             audioPreviewPlayer.pause();
             audioPlayIcon.className = "fa-solid fa-play ml-0.5 text-sm";
@@ -1317,15 +1468,12 @@
             statusTitle.innerText = 'Initializing local encoders...';
 
             try {
-                // Initialize rendering nodes for multiplex execution
                 compositionVideoNode = document.createElement('video');
                 compositionAudioNode = document.createElement('audio');
 
                 compositionVideoNode.src = currentVideoObjectURL;
                 compositionAudioNode.src = currentAudioObjectURL;
 
-                // Move composition elements directly to active DOM.
-                // An off-screen absolute positioning forces the browser hardware GPU engine to process frames at full speed!
                 compositionVideoNode.style.position = 'fixed';
                 compositionVideoNode.style.left = '-9999px';
                 compositionVideoNode.style.top = '-9999px';
@@ -1340,19 +1488,14 @@
                 compositionAudioNode.style.top = '-9999px';
                 document.body.appendChild(compositionAudioNode);
 
-                // Analyze Chosen Track Mixing Matrix Mode
-                const chosenMode = mixModeSelect.value;
+                const chosenMode = mixModeInput ? mixModeInput.value : 'replace';
 
-                // IMPORTANT: If replacing audio, strip the source video soundtrack completely by muting it.
-                // Otherwise, keep it unmuted so the Web Audio context can capture and overlay it.
                 compositionVideoNode.muted = (chosenMode === 'replace');
                 compositionAudioNode.muted = false;
 
-                // Set crossOrigin to avoid potential secure DOM canvas tainting
                 compositionVideoNode.crossOrigin = "anonymous";
                 compositionAudioNode.crossOrigin = "anonymous";
 
-                // Resolve stream metadata to capture layout properties
                 await Promise.all([
                     new Promise((resolve, reject) => {
                         compositionVideoNode.onloadedmetadata = resolve;
@@ -1364,56 +1507,40 @@
                     })
                 ]);
 
-                // Initialize DSP Web Audio API pipeline context
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 await audioCtx.resume();
                 
                 const destinationNode = audioCtx.createMediaStreamDestination();
 
-                // Connect custom soundtrack overlay channel
                 const customAudioSource = audioCtx.createMediaElementSource(compositionAudioNode);
                 const gainControlNode = audioCtx.createGain();
                 gainControlNode.gain.value = parseFloat(volSlider.value) / 100;
                 customAudioSource.connect(gainControlNode);
                 gainControlNode.connect(destinationNode);
 
-                // Inject and overlay original track ONLY if mixing mode is not set to replace
                 if (chosenMode !== 'replace') {
-                    // Inject and overlay the original video background audio track
                     const originalVideoSource = audioCtx.createMediaElementSource(compositionVideoNode);
                     const originalGainControl = audioCtx.createGain();
-                    
-                    if (chosenMode === 'dialogue') {
-                        // Dampen original soundscapes to clear up vocal frequencies
-                        originalGainControl.gain.value = 0.20;
-                    } else {
-                        // Standard gain combination factor
-                        originalGainControl.gain.value = 0.80;
-                    }
+                    originalGainControl.gain.value = 0.80;
                     originalVideoSource.connect(originalGainControl);
                     originalGainControl.connect(destinationNode);
                 }
 
-                // DIRECT STREAM CAPTURE (Bypassing Canvas draws ensures pristine framerate/quality!)
                 const captureStream = compositionVideoNode.captureStream ? compositionVideoNode.captureStream() : compositionVideoNode.mozCaptureStream();
-                
                 const combinedStream = new MediaStream();
 
-                // Add original native resolution video tracks
                 const rawVideoTracks = captureStream.getVideoTracks();
                 if (rawVideoTracks.length > 0) {
                     combinedStream.addTrack(rawVideoTracks[0]);
                 } else {
-                    throw new Error("No hardware video tracks detected in file source.");
+                    throw new Error("No hardware video tracks detected in source.");
                 }
 
-                // Add real-time mixed Audio track
                 const mixedAudioTracks = destinationNode.stream.getAudioTracks();
                 if (mixedAudioTracks.length > 0) {
                     combinedStream.addTrack(mixedAudioTracks[0]);
                 }
 
-                // Match system codecs
                 let recordingOptions = { mimeType: 'video/webm;codecs=vp9,opus' };
                 if (!MediaRecorder.isTypeSupported(recordingOptions.mimeType)) {
                     recordingOptions = { mimeType: 'video/webm;codecs=vp8,opus' };
@@ -1427,15 +1554,10 @@
 
                 recordedChunks = [];
                 
-                // Enforce high bitrates to preserve absolute visual and audio fidelity!
-                const bitrateOption = {
-                    videoBitsPerSecond: 15000000, // 15 Mbps for pristine visual definition
-                    audioBitsPerSecond: 320000,   // 320 Kbps studio high-fidelity audio
-                };
-
                 streamRecorder = new MediaRecorder(combinedStream, {
                     ...recordingOptions,
-                    ...bitrateOption
+                    videoBitsPerSecond: 15000000,
+                    audioBitsPerSecond: 320000,
                 });
                 
                 streamRecorder.ondataavailable = (e) => {
@@ -1445,7 +1567,6 @@
                 };
 
                 streamRecorder.onstop = () => {
-                    // Only process result blob if recording wasn't cancelled mid-way
                     if (recordedChunks.length > 0) {
                         const finalBlob = new Blob(recordedChunks, { type: streamRecorder.mimeType || 'video/webm' });
                         const blobURL = URL.createObjectURL(finalBlob);
@@ -1453,15 +1574,12 @@
                     }
                 };
 
-                // Extract bounds for custom trimming during render playback
                 const activeTrimStart = parseFloat(trimStartSlider.value);
                 const activeTrimEnd = parseFloat(trimEndSlider.value);
 
-                // Set Initial Starting boundaries prior to play execution
                 compositionVideoNode.currentTime = 0;
                 compositionAudioNode.currentTime = activeTrimStart;
 
-                // Precision tracking render monitoring loop (30ms tight loop checks for instant cut-off)
                 renderTimer = setInterval(() => {
                     if (!compositionVideoNode || !compositionAudioNode) return;
                     
@@ -1469,20 +1587,17 @@
                     const durationVid = compositionVideoNode.duration;
                     const currentAudTime = compositionAudioNode.currentTime;
 
-                    // SMART AUDIO LOOPING LOGIC DURING ENCODING RUN
                     if (loopAudioToggle.checked) {
                         if (currentAudTime >= activeTrimEnd || compositionAudioNode.ended) {
                             compositionAudioNode.currentTime = activeTrimStart;
                             compositionAudioNode.play().catch(() => {});
                         }
                     } else {
-                        // Pause the custom audio node explicitly if it exceeds manual End Trim bounds (when looping is OFF)
                         if (currentAudTime >= activeTrimEnd) {
                             compositionAudioNode.pause();
                         }
                     }
 
-                    // CRITICAL DURATION LOCK: Stop recording immediately when the original video ends
                     if (currentVidTime >= durationVid || compositionVideoNode.ended) {
                         statusTitle.innerText = `Multiplexing: 100%`;
                         terminateStreamsRendering();
@@ -1493,16 +1608,12 @@
                     statusTitle.innerText = `Multiplexing: ${Math.floor(renderPercentage)}%`;
                 }, 30);
 
-                compositionVideoNode.onended = () => {
-                    terminateStreamsRendering();
-                };
-
+                compositionVideoNode.onended = () => terminateStreamsRendering();
                 compositionVideoNode.onerror = () => {
-                    displayToast('A hardware error occurred during native encoding.');
+                    displayToast('Hardware encoding error.');
                     abortProcessPipeline();
                 };
 
-                // Play and Record simultaneously
                 compositionVideoNode.play();
                 compositionAudioNode.play();
                 streamRecorder.start();
@@ -1514,61 +1625,42 @@
             }
         });
 
-        // Trigger Abort / Cancel Workflow
-        btnCancelMerge.onclick = () => {
-            abortProcessPipeline(true);
-        };
+        btnCancelMerge.onclick = () => abortProcessPipeline(true);
 
-        // Terminate rendering cycles and clean up the active DOM nodes
         function terminateStreamsRendering(isCancelled = false) {
             clearInterval(renderTimer);
             if (streamRecorder && streamRecorder.state !== 'inactive') {
-                if (isCancelled) {
-                    recordedChunks = []; // Empty chunks to prevent triggering preview player
-                }
+                if (isCancelled) recordedChunks = [];
                 streamRecorder.stop();
             }
             if (compositionVideoNode) {
                 compositionVideoNode.pause();
                 compositionVideoNode.removeAttribute('src');
-                compositionVideoNode.load();
-                if (compositionVideoNode.parentNode) {
-                    compositionVideoNode.parentNode.removeChild(compositionVideoNode);
-                }
+                if (compositionVideoNode.parentNode) compositionVideoNode.parentNode.removeChild(compositionVideoNode);
             }
             if (compositionAudioNode) {
                 compositionAudioNode.pause();
                 compositionAudioNode.removeAttribute('src');
-                compositionAudioNode.load();
-                if (compositionAudioNode.parentNode) {
-                    compositionAudioNode.parentNode.removeChild(compositionAudioNode);
-                }
+                if (compositionAudioNode.parentNode) compositionAudioNode.parentNode.removeChild(compositionAudioNode);
             }
-            if (audioCtx) {
-                audioCtx.close();
-            }
+            if (audioCtx) audioCtx.close();
         }
 
-        // Abort the merging pipeline on errors or cancel requests
         function abortProcessPipeline(isUserCancel = false) {
             terminateStreamsRendering(isUserCancel);
             processWindow.classList.add('hidden');
-            btnMerge.style.display = 'block';
-            if (isUserCancel) {
-                displayToast('Merging process cancelled by user.');
-            }
+            btnMerge.style.display = 'flex';
+            if (isUserCancel) displayToast('Merging process cancelled.');
         }
 
-        // Display Completed State with Rendered Output Preview Player
         function displayFinalizedOverlay(mergedURL) {
-            hasCompletedMerge = true; // Mark as successfully merged at least once
+            hasCompletedMerge = true;
             processWindow.classList.add('hidden');
             completedWindow.classList.remove('hidden');
 
             if (currentMergedObjectURL) URL.revokeObjectURL(currentMergedObjectURL);
             currentMergedObjectURL = mergedURL;
 
-            // Load directly into completed preview element
             mergedPreviewPlayer.src = mergedURL;
             mergedPreviewPlayer.load();
 
@@ -1582,42 +1674,26 @@
             };
         }
 
-        /* ==========================================================
-           POST-PROCESSING RE-UPLOAD / START NEW PROJECT ACTION
-           ========================================================== */
         btnReupload.onclick = () => {
-            // Clean physical object streams & memory addresses to prevent leaks
             stateVideo = null;
             stateAudio = null;
             originalVideoName = '';
-            hasCompletedMerge = false; // Reset merge memory marker
+            hasCompletedMerge = false;
 
             if (currentVideoObjectURL) URL.revokeObjectURL(currentVideoObjectURL);
             if (currentAudioObjectURL) URL.revokeObjectURL(currentAudioObjectURL);
             if (currentMergedObjectURL) URL.revokeObjectURL(currentMergedObjectURL);
 
-            currentVideoObjectURL = '';
-            currentAudioObjectURL = '';
-            currentMergedObjectURL = '';
-
-            // Stop preview playing elements
             videoPlayer.pause();
             videoPlayer.removeAttribute('src');
-            videoPlayer.load();
-
             audioPreviewPlayer.pause();
             audioPreviewPlayer.removeAttribute('src');
-            audioPreviewPlayer.load();
-
             mergedPreviewPlayer.pause();
             mergedPreviewPlayer.removeAttribute('src');
-            mergedPreviewPlayer.load();
 
-            // Clear Input Node elements values
-            videoInput.value = '';
-            audioInput.value = '';
+            if (videoInput) videoInput.value = '';
+            if (audioInput) audioInput.value = '';
 
-            // Clean Display containers and unhide Dropzones
             videoPreviewFrame.classList.add('hidden');
             document.getElementById('video-metadata').classList.add('hidden');
             videoDropzone.classList.remove('hidden');
@@ -1625,7 +1701,6 @@
             audioPreviewFrame.classList.add('hidden');
             audioDropzone.classList.remove('hidden');
 
-            // Reset Badge configurations
             videoBadge.className = "text-xs px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-1.5";
             videoBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Video File';
 
@@ -1634,56 +1709,604 @@
             audioTrimBadge.classList.add('hidden');
             autoLoopBadge.classList.add('hidden');
 
-            // Reset Mixing Control Parameters
             volSlider.value = "100";
             volNumber.value = "100";
             loopAudioToggle.checked = false;
 
-            // Restructure primary merge button style back to defaults
-            btnMerge.style.display = 'block';
+            btnMerge.style.display = 'flex';
             btnMerge.setAttribute('disabled', 'true');
             btnMerge.innerHTML = `<i class="fa-solid fa-shuffle"></i> Merge Audio & Video`;
             btnMerge.className = "glow-button w-full py-4 px-6 rounded-xl bg-gradient-to-r from-accentPurple to-[#512da8] text-white font-bold text-base shadow-lg shadow-accentPurple/20 hover:shadow-accentPurple/35 disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none flex items-center justify-center gap-3 transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0";
 
             completedWindow.classList.add('hidden');
 
-            displayToast('Workspace cleared successfully. Load fresh assets to begin composite!');
+            displayToast('Workspace reset successfully!');
         };
 
-        // Custom Notification Toast Functionality
-        function displayToast(msg) {
-            const toastElement = document.createElement('div');
-            toastElement.className = 'fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-[#161a29]/95 border border-accentTeal/30 text-white px-5 py-3 rounded-2xl text-sm font-semibold shadow-2xl backdrop-blur-md transition-all duration-300 flex items-center gap-2';
-            toastElement.innerHTML = `<i class="fa-solid fa-circle-check text-accentTeal"></i> ${msg}`;
-            document.body.appendChild(toastElement);
-            setTimeout(() => {
-                toastElement.style.opacity = '0';
-                setTimeout(() => {
-                    if (toastElement.parentNode) {
-                        toastElement.parentNode.removeChild(toastElement);
+        /* ==========================================================
+           5. ISOLATED SPECTRAL AUDIO TRIMMER ENGINE
+           ========================================================== */
+        let trimmerAudioContext = null;
+        let trimmerAudioBuffer = null;
+        let trimmerSourceNode = null;
+        let trimmerAnalyserNode = null;
+        let trimmerIsPlaying = false;
+        let trimmerStartTime = 0;
+        let trimmerPauseOffset = 0;
+        let trimmerAnimationId = null;
+
+        let trimmerRenderStreamRecorder = null;
+        let trimmerRecordedChunks = [];
+        let trimmerExportBlobURL = '';
+
+        const trimmerInput = document.getElementById('trimmer-input');
+        const trimmerDropzone = document.getElementById('trimmer-dropzone');
+        const trimmerWorkspace = document.getElementById('trimmer-workspace');
+        const trimmerStatusBadge = document.getElementById('trimmer-status-badge');
+        
+        const trimmerFileName = document.getElementById('trimmer-file-name');
+        const trimmerFileSize = document.getElementById('trimmer-file-size');
+        const trimmerTotalDuration = document.getElementById('trimmer-total-duration');
+        const trimmerChangeBtn = document.getElementById('trimmer-change-btn');
+
+        const trimmerPlayBtn = document.getElementById('trimmer-play-btn');
+        const trimmerPlayIcon = document.getElementById('trimmer-play-icon');
+        const trimmerCurrentTime = document.getElementById('trimmer-current-time');
+        const trimmerWindowEndTime = document.getElementById('trimmer-window-end-time');
+        const trimmerWindowDuration = document.getElementById('trimmer-window-duration');
+        const trimmerScrubSlider = document.getElementById('trimmer-scrub-slider');
+
+        const trimmerStartSlider = document.getElementById('trimmer-start-slider');
+        const trimmerEndSlider = document.getElementById('trimmer-end-slider');
+        const trimmerStartDisplay = document.getElementById('trimmer-start-display');
+        const trimmerEndDisplay = document.getElementById('trimmer-end-display');
+        const trimmerBarsContainer = document.getElementById('trimmer-bars-container');
+        const trimmerSelectionOverlay = document.getElementById('trimmer-selection-overlay');
+
+        const samplerate44 = document.getElementById('samplerate-44');
+        const samplerate48 = document.getElementById('samplerate-48');
+        let selectedSampleRate = 44100;
+
+        const btnExportAudio = document.getElementById('btn-export-audio');
+        const trimmerRenderWindow = document.getElementById('trimmer-render-window');
+        const btnCancelTrimmerRender = document.getElementById('btn-cancel-trimmer-render');
+        const trimmerCompletedWindow = document.getElementById('trimmer-completed-window');
+        const trimmerExportPlayer = document.getElementById('trimmer-export-player');
+        const btnDownloadTrimmed = document.getElementById('btn-download-trimmed');
+        const btnTrimmerReset = document.getElementById('btn-trimmer-reset');
+
+        // Quick Presets elements
+        const presetBtn15 = document.getElementById('preset-first-15');
+        const presetBtn30 = document.getElementById('preset-first-30');
+        const presetBtnLast30 = document.getElementById('preset-last-30');
+        const presetBtnReset = document.getElementById('preset-reset');
+        const allPresetBtns = [presetBtn15, presetBtn30, presetBtnLast30, presetBtnReset];
+
+        function setActivePresetButton(activeBtn) {
+            allPresetBtns.forEach(btn => {
+                if (!btn) return;
+                if (btn === activeBtn) {
+                    btn.className = "preset-btn px-2.5 py-1 rounded-lg bg-accentTeal/20 border border-accentTeal/60 text-xs font-bold text-accentTeal shadow-sm shadow-accentTeal/20 transition-colors";
+                } else {
+                    btn.className = "preset-btn px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-300 transition-colors";
+                }
+            });
+        }
+
+        if (presetBtn15) presetBtn15.onclick = () => applyTrimmerPreset(0, 15, presetBtn15);
+        if (presetBtn30) presetBtn30.onclick = () => applyTrimmerPreset(0, 30, presetBtn30);
+        if (presetBtnLast30) presetBtnLast30.onclick = () => {
+            if (!trimmerAudioBuffer) {
+                displayToast('Please load an audio track first.');
+                return;
+            }
+            const dur = trimmerAudioBuffer.duration;
+            applyTrimmerPreset(Math.max(0, dur - 30), dur, presetBtnLast30);
+        };
+        if (presetBtnReset) presetBtnReset.onclick = () => {
+            if (!trimmerAudioBuffer) {
+                displayToast('Please load an audio track first.');
+                return;
+            }
+            applyTrimmerPreset(0, trimmerAudioBuffer.duration, presetBtnReset);
+        };
+
+        function applyTrimmerPreset(start, end, clickedBtn) {
+            if (!trimmerAudioBuffer) {
+                displayToast('Please load an audio track first.');
+                return;
+            }
+            if (clickedBtn) {
+                setActivePresetButton(clickedBtn);
+            }
+            const maxDur = trimmerAudioBuffer.duration;
+            const actualStart = Math.max(0, Math.min(start, maxDur - 0.5));
+            const actualEnd = Math.max(actualStart + 0.5, Math.min(end, maxDur));
+
+            trimmerStartSlider.value = actualStart.toFixed(1);
+            trimmerEndSlider.value = actualEnd.toFixed(1);
+            trimmerStartDisplay.innerText = `${actualStart.toFixed(1)}s`;
+            trimmerEndDisplay.innerText = `${actualEnd.toFixed(1)}s`;
+
+            const windowDuration = actualEnd - actualStart;
+            trimmerScrubSlider.max = Math.floor(windowDuration);
+            trimmerScrubSlider.value = 0;
+            trimmerPauseOffset = 0;
+            trimmerCurrentTime.innerText = "0:00";
+
+            updateTrimmerWaveformVisuals();
+
+            if (trimmerIsPlaying) {
+                startTrimmerPlayback(0);
+            }
+
+            displayToast(`Preset applied: ${actualStart.toFixed(1)}s - ${actualEnd.toFixed(1)}s`);
+        }
+
+        samplerate44.onclick = () => {
+            selectedSampleRate = 44100;
+            samplerate44.className = "px-3 py-1.5 rounded-lg bg-accentTeal/20 border border-accentTeal/60 text-accentTeal font-bold";
+            samplerate48.className = "px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 font-semibold hover:text-white";
+        };
+
+        samplerate48.onclick = () => {
+            selectedSampleRate = 48000;
+            samplerate48.className = "px-3 py-1.5 rounded-lg bg-accentTeal/20 border border-accentTeal/60 text-accentTeal font-bold";
+            samplerate44.className = "px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 font-semibold hover:text-white";
+        };
+
+        ['dragenter', 'dragover'].forEach(name => {
+            trimmerDropzone.addEventListener(name, (e) => { e.preventDefault(); trimmerDropzone.classList.add('dragover'); }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(name => {
+            trimmerDropzone.addEventListener(name, (e) => { e.preventDefault(); trimmerDropzone.classList.remove('dragover'); }, false);
+        });
+
+        trimmerDropzone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length) loadTrimmerFile(files[0]);
+        });
+
+        trimmerInput.addEventListener('change', (e) => {
+            if (e.target.files.length) loadTrimmerFile(e.target.files[0]);
+        });
+
+        trimmerChangeBtn.onclick = () => {
+            stopTrimmerPlayback();
+            trimmerWorkspace.classList.add('hidden');
+            trimmerDropzone.classList.remove('hidden');
+            trimmerStatusBadge.className = "text-xs px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-medium flex items-center gap-2";
+            trimmerStatusBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Awaiting Audio Track';
+            trimmerInput.value = '';
+        };
+
+        async function loadTrimmerFile(file) {
+            if (!file.type.startsWith('audio/') && !file.name.match(/\.(mp3|wav|ogg|m4a|flac)$/i)) {
+                displayToast('Unsupported audio format for trimmer.');
+                return;
+            }
+
+            try {
+                trimmerStatusBadge.className = "text-xs px-3 py-1.5 rounded-full bg-accentPurple/20 border border-accentPurple/40 text-accentPurple font-semibold flex items-center gap-2";
+                trimmerStatusBadge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Decoding Audio PCM...';
+
+                const arrayBuffer = await file.arrayBuffer();
+                trimmerAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                trimmerAudioBuffer = await trimmerAudioContext.decodeAudioData(arrayBuffer);
+
+                trimmerFileName.innerText = file.name;
+                trimmerFileSize.innerText = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+                const totalSecs = trimmerAudioBuffer.duration;
+                trimmerTotalDuration.innerText = formatTime(totalSecs);
+
+                trimmerStartSlider.max = totalSecs.toFixed(1);
+                trimmerEndSlider.max = totalSecs.toFixed(1);
+                trimmerStartSlider.value = "0";
+                trimmerEndSlider.value = totalSecs.toFixed(1);
+
+                trimmerStartDisplay.innerText = "0.0s";
+                trimmerEndDisplay.innerText = `${totalSecs.toFixed(1)}s`;
+
+                trimmerDropzone.classList.add('hidden');
+                trimmerWorkspace.classList.remove('hidden');
+
+                trimmerStatusBadge.className = "text-xs px-3 py-1.5 rounded-full bg-accentTeal/20 border border-accentTeal/40 text-accentTeal font-bold flex items-center gap-2";
+                trimmerStatusBadge.innerHTML = '<i class="fa-solid fa-check"></i> Audio Matrix Active';
+
+                updateTrimmerWaveformVisuals();
+                displayToast('Audio file loaded into Isolated Trimmer!');
+
+            } catch (err) {
+                console.error(err);
+                displayToast('Failed to decode audio file structure.');
+                trimmerStatusBadge.className = "text-xs px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 font-medium";
+                trimmerStatusBadge.innerText = 'Decoding Error';
+            }
+        }
+
+        function updateTrimmerWaveformVisuals() {
+            if (!trimmerAudioBuffer) return;
+
+            const totalDur = trimmerAudioBuffer.duration;
+            const startVal = parseFloat(trimmerStartSlider.value);
+            const endVal = parseFloat(trimmerEndSlider.value);
+            const windowDur = Math.max(0.1, endVal - startVal);
+
+            trimmerStartDisplay.innerText = `${startVal.toFixed(1)}s`;
+            trimmerEndDisplay.innerText = `${endVal.toFixed(1)}s`;
+            trimmerWindowDuration.innerText = `${windowDur.toFixed(1)}s`;
+            trimmerWindowEndTime.innerText = formatTime(windowDur);
+
+            trimmerScrubSlider.max = Math.floor(windowDur);
+
+            const startPercent = (startVal / totalDur) * 100;
+            const endPercent = (endVal / totalDur) * 100;
+            
+            if (trimmerSelectionOverlay) {
+                trimmerSelectionOverlay.style.left = `${startPercent}%`;
+                trimmerSelectionOverlay.style.width = `${Math.max(0.5, endPercent - startPercent)}%`;
+            }
+
+            trimmerBarsContainer.innerHTML = '';
+            const barCount = 60;
+            const channelData = trimmerAudioBuffer.getChannelData(0);
+            const step = Math.floor(channelData.length / barCount);
+
+            const startIndex = Math.floor(barCount * (startVal / totalDur));
+            const endIndex = Math.floor(barCount * (endVal / totalDur));
+
+            for (let i = 0; i < barCount; i++) {
+                let sum = 0;
+                for (let j = 0; j < step; j += 10) {
+                    sum += Math.abs(channelData[i * step + j] || 0);
+                }
+                const avg = sum / (step / 10);
+                const heightPx = Math.max(6, Math.min(100, Math.floor(avg * 110)));
+
+                const bar = document.createElement('div');
+                bar.className = 'wave-bar';
+                bar.style.height = `${heightPx}px`;
+
+                if (i >= startIndex && i <= endIndex) {
+                    bar.style.backgroundColor = '#00f5d4';
+                    bar.style.boxShadow = '0 0 8px #00f5d4';
+                    bar.style.opacity = '1.0';
+                } else {
+                    bar.style.backgroundColor = 'rgba(124, 77, 255, 0.3)';
+                    bar.style.boxShadow = 'none';
+                    bar.style.opacity = '0.2';
+                }
+
+                trimmerBarsContainer.appendChild(bar);
+            }
+        }
+
+        trimmerStartSlider.oninput = () => {
+            let startVal = parseFloat(trimmerStartSlider.value);
+            const endVal = parseFloat(trimmerEndSlider.value);
+            if (startVal >= endVal) {
+                startVal = Math.max(0, endVal - 0.5);
+                trimmerStartSlider.value = startVal;
+            }
+            updateTrimmerWaveformVisuals();
+            if (trimmerIsPlaying) startTrimmerPlayback(0);
+        };
+
+        trimmerEndSlider.oninput = () => {
+            const startVal = parseFloat(trimmerStartSlider.value);
+            let endVal = parseFloat(trimmerEndSlider.value);
+            if (endVal <= startVal) {
+                endVal = Math.min(trimmerAudioBuffer.duration, startVal + 0.5);
+                trimmerEndSlider.value = endVal;
+            }
+            updateTrimmerWaveformVisuals();
+            if (trimmerIsPlaying) startTrimmerPlayback(0);
+        };
+
+        trimmerPlayBtn.onclick = () => {
+            if (trimmerIsPlaying) {
+                pauseTrimmerPlayback();
+            } else {
+                startTrimmerPlayback(trimmerPauseOffset);
+            }
+        };
+
+        function startTrimmerPlayback(offset = 0) {
+            if (!trimmerAudioBuffer) return;
+            stopTrimmerPlayback();
+
+            const startTrimVal = parseFloat(trimmerStartSlider.value);
+            const endTrimVal = parseFloat(trimmerEndSlider.value);
+            const totalWindowDuration = endTrimVal - startTrimVal;
+
+            const safeOffset = Math.max(0, Math.min(offset, totalWindowDuration));
+
+            trimmerSourceNode = trimmerAudioContext.createBufferSource();
+            trimmerSourceNode.buffer = trimmerAudioBuffer;
+
+            trimmerAnalyserNode = trimmerAudioContext.createAnalyser();
+            trimmerAnalyserNode.fftSize = 64;
+
+            trimmerSourceNode.connect(trimmerAnalyserNode);
+            trimmerAnalyserNode.connect(trimmerAudioContext.destination);
+
+            const absoluteStartPos = startTrimVal + safeOffset;
+            const remainingDuration = Math.max(0.01, endTrimVal - absoluteStartPos);
+
+            try {
+                trimmerSourceNode.start(0, absoluteStartPos, remainingDuration);
+                trimmerStartTime = trimmerAudioContext.currentTime - safeOffset;
+                trimmerIsPlaying = true;
+
+                trimmerPlayIcon.className = "fa-solid fa-pause text-base";
+                animateTrimmerWaveform();
+
+                trimmerSourceNode.onended = () => {
+                    if (trimmerIsPlaying) {
+                        pauseTrimmerPlayback(true);
                     }
-                }, 400);
-            }, 3500);
+                };
+            } catch (err) {
+                console.error("Playback start error:", err);
+            }
+        }
+
+        function pauseTrimmerPlayback(isFinished = false) {
+            if (trimmerSourceNode) {
+                try { trimmerSourceNode.stop(); } catch(e){}
+                trimmerSourceNode = null;
+            }
+            if (trimmerAnimationId) cancelAnimationFrame(trimmerAnimationId);
+            
+            trimmerIsPlaying = false;
+            trimmerPlayIcon.className = "fa-solid fa-play ml-1 text-base";
+
+            if (isFinished) {
+                trimmerPauseOffset = 0;
+                trimmerScrubSlider.value = 0;
+                trimmerCurrentTime.innerText = "0:00";
+            }
+        }
+
+        function stopTrimmerPlayback() {
+            pauseTrimmerPlayback(false);
+            trimmerPauseOffset = 0;
+        }
+
+        function animateTrimmerWaveform() {
+            if (!trimmerIsPlaying) return;
+
+            const elapsed = trimmerAudioContext.currentTime - trimmerStartTime;
+            const startVal = parseFloat(trimmerStartSlider.value);
+            const endVal = parseFloat(trimmerEndSlider.value);
+            const windowDur = endVal - startVal;
+
+            if (elapsed >= windowDur) {
+                pauseTrimmerPlayback(true);
+                return;
+            }
+
+            trimmerPauseOffset = elapsed;
+            trimmerScrubSlider.value = Math.floor(elapsed);
+            trimmerCurrentTime.innerText = formatTime(elapsed);
+
+            if (trimmerAnalyserNode) {
+                const dataArray = new Uint8Array(trimmerAnalyserNode.frequencyBinCount);
+                trimmerAnalyserNode.getByteFrequencyData(dataArray);
+
+                const bars = trimmerBarsContainer.children;
+                const startIndex = Math.floor(bars.length * (startVal / trimmerAudioBuffer.duration));
+                const endIndex = Math.floor(bars.length * (endVal / trimmerAudioBuffer.duration));
+
+                for (let i = startIndex; i <= endIndex; i++) {
+                    if (bars[i]) {
+                        const freqVal = dataArray[i % dataArray.length] || 0;
+                        const dynamicScale = Math.max(6, Math.floor((freqVal / 255) * 110));
+                        bars[i].style.height = `${dynamicScale}px`;
+                    }
+                }
+            }
+
+            trimmerAnimationId = requestAnimationFrame(animateTrimmerWaveform);
+        }
+
+        trimmerScrubSlider.oninput = () => {
+            const scrubVal = parseFloat(trimmerScrubSlider.value);
+            trimmerPauseOffset = scrubVal;
+            trimmerCurrentTime.innerText = formatTime(scrubVal);
+            if (trimmerIsPlaying) {
+                startTrimmerPlayback(scrubVal);
+            }
+        };
+
+        btnExportAudio.onclick = async () => {
+            if (!trimmerAudioBuffer) return;
+
+            stopTrimmerPlayback();
+            trimmerRenderWindow.classList.remove('hidden');
+            trimmerCompletedWindow.classList.add('hidden');
+
+            const startVal = parseFloat(trimmerStartSlider.value);
+            const endVal = parseFloat(trimmerEndSlider.value);
+            const duration = endVal - startVal;
+
+            const selectedFormat = document.querySelector('input[name="export-format"]:checked').value;
+
+            try {
+                const offlineCtx = new OfflineAudioContext(
+                    trimmerAudioBuffer.numberOfChannels,
+                    Math.ceil(selectedSampleRate * duration),
+                    selectedSampleRate
+                );
+
+                const offlineSource = offlineCtx.createBufferSource();
+                offlineSource.buffer = trimmerAudioBuffer;
+                offlineSource.connect(offlineCtx.destination);
+                offlineSource.start(0, startVal, duration);
+
+                const renderedBuffer = await offlineCtx.startRendering();
+
+                if (selectedFormat === 'wav') {
+                    const wavBlob = audioBufferToWavBlob(renderedBuffer);
+                    displayTrimmerExport(wavBlob, 'trimmed_audio.wav');
+                } else {
+                    const streamDest = trimmerAudioContext.createMediaStreamDestination();
+                    const streamSource = trimmerAudioContext.createBufferSource();
+                    streamSource.buffer = renderedBuffer;
+                    streamSource.connect(streamDest);
+
+                    let mimeType = 'audio/webm';
+                    if (selectedFormat === 'mp3') mimeType = 'audio/mpeg';
+                    if (selectedFormat === 'ogg') mimeType = 'audio/ogg';
+
+                    trimmerRecordedChunks = [];
+                    trimmerRenderStreamRecorder = new MediaRecorder(streamDest.stream);
+
+                    trimmerRenderStreamRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) trimmerRecordedChunks.push(e.data);
+                    };
+
+                    trimmerRenderStreamRecorder.onstop = () => {
+                        if (trimmerRecordedChunks.length > 0) {
+                            const exportBlob = new Blob(trimmerRecordedChunks, { type: mimeType });
+                            displayTrimmerExport(exportBlob, `trimmed_audio.${selectedFormat}`);
+                        }
+                    };
+
+                    streamSource.start();
+                    trimmerRenderStreamRecorder.start();
+
+                    setTimeout(() => {
+                        if (trimmerRenderStreamRecorder && trimmerRenderStreamRecorder.state !== 'inactive') {
+                            trimmerRenderStreamRecorder.stop();
+                        }
+                    }, duration * 1000 + 200);
+                }
+
+            } catch (err) {
+                console.error(err);
+                displayToast(`Export failed: ${err.message}`);
+                trimmerRenderWindow.classList.add('hidden');
+            }
+        };
+
+        btnCancelTrimmerRender.onclick = () => {
+            if (trimmerRenderStreamRecorder && trimmerRenderStreamRecorder.state !== 'inactive') {
+                trimmerRecordedChunks = [];
+                trimmerRenderStreamRecorder.stop();
+            }
+            trimmerRenderWindow.classList.add('hidden');
+            displayToast('Audio render cancelled.');
+        };
+
+        function displayTrimmerExport(blob, fileName) {
+            trimmerRenderWindow.classList.add('hidden');
+            trimmerCompletedWindow.classList.remove('hidden');
+
+            if (trimmerExportBlobURL) URL.revokeObjectURL(trimmerExportBlobURL);
+            trimmerExportBlobURL = URL.createObjectURL(blob);
+
+            trimmerExportPlayer.src = trimmerExportBlobURL;
+            trimmerExportPlayer.load();
+
+            btnDownloadTrimmed.onclick = () => {
+                const a = document.createElement('a');
+                a.href = trimmerExportBlobURL;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+        }
+
+        btnTrimmerReset.onclick = () => {
+            if (trimmerExportPlayer) {
+                trimmerExportPlayer.pause();
+                trimmerExportPlayer.muted = true;
+                trimmerExportPlayer.currentTime = 0;
+            }
+            stopTrimmerPlayback();
+
+            trimmerCompletedWindow.classList.add('hidden');
+            displayToast('Ready for another trim section.');
+        };
+
+        function audioBufferToWavBlob(buffer) {
+            const numChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = 1;
+            const bitDepth = 16;
+            
+            let result;
+            if (numChannels === 2) {
+                result = interleave(buffer.getChannelData(0), buffer.getChannelData(1));
+            } else {
+                result = buffer.getChannelData(0);
+            }
+
+            return createWavBlob(result, numChannels, sampleRate, bitDepth);
+        }
+
+        function interleave(inputL, inputR) {
+            const length = inputL.length + inputR.length;
+            const result = new Float32Array(length);
+            let index = 0;
+            let inputIndex = 0;
+
+            while (index < length) {
+                result[index++] = inputL[inputIndex];
+                result[index++] = inputR[inputIndex];
+                inputIndex++;
+            }
+            return result;
+        }
+
+        function createWavBlob(samples, numChannels, sampleRate, bitDepth) {
+            const bytesPerSample = bitDepth / 8;
+            const blockAlign = numChannels * bytesPerSample;
+            const buffer = new ArrayBuffer(44 + samples.length * bytesPerSample);
+            const view = new DataView(buffer);
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + samples.length * bytesPerSample, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * blockAlign, true);
+            view.setUint16(32, blockAlign, true);
+            view.setUint16(34, bitDepth, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, samples.length * bytesPerSample, true);
+
+            floatTo16BitPCM(view, 44, samples);
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        function floatTo16BitPCM(output, offset, input) {
+            for (let i = 0; i < input.length; i++, offset += 2) {
+                const s = Math.max(-1, Math.min(1, input[i]));
+                output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
         }
 
         /* ==========================================================
-           5. PERSISTENT BROWSER DETECTION INTERFACE INITIALIZER
+           6. BROWSER WARNING INITIALIZER
            ========================================================== */
         window.addEventListener('DOMContentLoaded', () => {
             const ua = navigator.userAgent.toLowerCase();
             const vendor = navigator.vendor ? navigator.vendor.toLowerCase() : '';
-            
-            const isBrave = !!(navigator.brave && navigator.brave.isBrave);
-            const isEdge = ua.includes('edg') || ua.includes('edge');
-            const isOpera = ua.includes('opr') || ua.includes('opera');
-            const isVivaldi = ua.includes('vivaldi');
-            
-            const isPureChrome = ua.includes('chrome') && 
-                                 vendor.includes('google') && 
-                                 !isEdge && 
-                                 !isOpera && 
-                                 !isVivaldi && 
-                                 !isBrave;
+            const isPureChrome = ua.includes('chrome') && vendor.includes('google');
 
             const warningModal = document.getElementById('browser-warning-modal');
             const closeWarningBtn = document.getElementById('close-warning-btn');
